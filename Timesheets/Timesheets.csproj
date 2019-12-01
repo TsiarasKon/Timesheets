@@ -5,6 +5,15 @@
     <UserSecretsId>aspnet-Timesheets-81F1A023-6222-4659-9D53-3AC85E0E7990</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Data\Migrations\20191201221610_M1.cs" />
+    <Compile Remove="Data\Migrations\20191201221610_M1.Designer.cs" />
+    <Compile Remove="Data\Migrations\20191201221854_M2.cs" />
+    <Compile Remove="Data\Migrations\20191201221854_M2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20191201223524_M2.cs" />
+    <Compile Remove="Data\Migrations\20191201223524_M2.Designer.cs" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.0.0" />
