@@ -12,6 +12,10 @@
     <Compile Remove="Data\Migrations\20191201221854_M2.Designer.cs" />
     <Compile Remove="Data\Migrations\20191201223524_M2.cs" />
     <Compile Remove="Data\Migrations\20191201223524_M2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20191201231530_M3.cs" />
+    <Compile Remove="Data\Migrations\20191201231530_M3.Designer.cs" />
+    <Compile Remove="Data\Migrations\20191201231607_M3.cs" />
+    <Compile Remove="Data\Migrations\20191201231607_M3.Designer.cs" />
   </ItemGroup>
 
 

@@ -13,6 +13,7 @@ namespace Timesheets.Models
         public long DepartmentHeadId { get; set; }
         public ApplicationUser DepartmentHead { get; set; }
 
+        public ICollection<ApplicationUser> Users { get; set; }
 
         public ICollection<DepartmentProject> RelatedProjects { get; set; }
 
