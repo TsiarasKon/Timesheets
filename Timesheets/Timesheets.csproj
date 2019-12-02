@@ -16,6 +16,8 @@
     <Compile Remove="Data\Migrations\20191201231530_M3.Designer.cs" />
     <Compile Remove="Data\Migrations\20191201231607_M3.cs" />
     <Compile Remove="Data\Migrations\20191201231607_M3.Designer.cs" />
+    <Compile Remove="Data\Migrations\20191202151940_M4.cs" />
+    <Compile Remove="Data\Migrations\20191202151940_M4.Designer.cs" />
   </ItemGroup>
 
 
@@ -25,6 +27,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.0.0" />
   </ItemGroup>
 
 </Project>

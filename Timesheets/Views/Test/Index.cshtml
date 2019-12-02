@@ -1,0 +1,54 @@
+﻿@model Timesheets.Models.TestPageModel
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Testing here</h1>
+
+<table class="table">
+    <tr>
+        <th>DepartmentId</th>
+        <th>DepartmentName</th>
+    </tr>
+
+    @foreach (var dept in Model.Departments)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => dept.DepartmentId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => dept.Name)
+            </td>
+        </tr>
+    }
+</table>
+<br />
+<br />
+<table class="table">
+    <tr>
+        <th>ProjectId</th>
+        <th>ProjectName</th>
+        <th>OwnerDepartmentId</th>
+        <th>RelatedDepartmentsIds</th>
+    </tr>
+
+    @foreach (var project in Model.Projects)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => project.ProjectId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => project.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => project.OwnerDepartmentId)
+            </td>
+            <td>
+                @(string.Join(", ", project.RelatedDepartments.Select(d => d.DepartmentId)));
+            </td>
+        </tr>
+    }
+</table>
