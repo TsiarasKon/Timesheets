@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Timesheets.Areas.Identity.Data;
 
 namespace Timesheets.Models
 {
@@ -10,7 +11,7 @@ namespace Timesheets.Models
         public long DepartmentId { get; set; }
         public string Name { get; set; }
 
-        public long DepartmentHeadId { get; set; }
+        public string? DepartmentHeadId { get; set; }
         public ApplicationUser DepartmentHead { get; set; }
 
         public ICollection<ApplicationUser> Users { get; set; }

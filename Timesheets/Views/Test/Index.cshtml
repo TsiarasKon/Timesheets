@@ -47,7 +47,14 @@
                 @Html.DisplayFor(modelItem => project.OwnerDepartmentId)
             </td>
             <td>
-                @(string.Join(", ", project.RelatedDepartments.Select(d => d.DepartmentId)));
+                @if (project.RelatedDepartments != null) 
+                {
+                    @(string.Join(", ", project.RelatedDepartments.Select(d => d.DepartmentId)));
+                }
+                else
+                {
+                    @Html.Raw("-");
+                }
             </td>
         </tr>
     }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Timesheets.Areas.Identity.Data;
 
 namespace Timesheets.Models
 {
@@ -11,7 +12,7 @@ namespace Timesheets.Models
         public DateTime DateCreated { get; set; }
         public int HoursWorked { get; set; }
 
-        public long UserId { get; set; }
+        public string UserId { get; set; }
         public ApplicationUser User { get; set; }
 
         public long ProjectId { get; set; }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Timesheets.Areas.Identity.Data;
 using Timesheets.Models;
 
 namespace Timesheets.Data
@@ -40,6 +41,12 @@ namespace Timesheets.Data
                 .HasOne(p => p.OwnerDepartment)
                 .WithMany(d => d.OwnedProjects)
                 .HasForeignKey(p => p.OwnerDepartmentId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<Department>()
+                .HasOne(p => p.DepartmentHead)
+                .WithMany(u => u.HeadingDepartments)
+                .HasForeignKey(p => p.DepartmentHeadId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             builder.Entity<ApplicationUser>()
