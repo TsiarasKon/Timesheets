@@ -8,9 +8,8 @@ using Timesheets.Models;
 
 namespace Timesheets.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<Project> Projects { get; set; }
@@ -54,7 +53,12 @@ namespace Timesheets.Data
                 .WithMany(d => d.Users)
                 .HasForeignKey(u => u.DepartmentId)
                 .OnDelete(DeleteBehavior.NoAction);
-                
+
+            builder.Entity<Timesheet>()
+                .HasOne(t => t.User)
+                .WithMany(u => u.Timesheets)
+                .HasForeignKey(u => u.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

@@ -14,7 +14,7 @@ namespace Timesheets.Areas.Identity.Data
         public string FirstName { get; set; }
 
         [PersonalData]
-        public string Surname { get; set; }
+        public string LastName { get; set; }
 
         [PersonalData]
         public double ManHourCost { get; set; }
@@ -27,6 +27,7 @@ namespace Timesheets.Areas.Identity.Data
         public string? ManagerId { get; set; }
         public ApplicationUser Manager { get; set; }
 
+        public ICollection<Timesheet> Timesheets { get; set; }
         public ICollection<Department> HeadingDepartments { get; set; }
     }
 }

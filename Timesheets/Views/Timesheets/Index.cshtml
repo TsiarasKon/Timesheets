@@ -1,0 +1,38 @@
+﻿@model TimesheetsViewModel
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>My Timesheets</h1>
+
+<table class="table">
+    <tr>
+        <th>Project Name</th>
+        <th>Full Name</th>
+        <th>Timesheet Date</th>
+        <th>Hours Worked</th>
+        <th>Total Cost</th>
+    </tr>
+
+    @foreach (var ts in Model.Timesheets)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => ts.Project.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => ts.User.FirstName) @Html.DisplayFor(modelItem => ts.User.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => ts.DateCreated)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => ts.HoursWorked)
+            </td>
+            <td>
+                @(ts.HoursWorked * ts.User.ManHourCost)
+            </td>
+        </tr>
+    }
+</table>

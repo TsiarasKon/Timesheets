@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Timesheets.Models
 {
-    public class TestPageModel
+    public class TestIndexViewModel
     {
         public IEnumerable<Project> Projects { get; set; }
         public IEnumerable<Department> Departments { get; set; }

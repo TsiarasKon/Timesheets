@@ -1,4 +1,4 @@
-﻿@model Timesheets.Models.TestPageModel
+﻿@model Timesheets.Models.TestIndexViewModel
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -47,7 +47,7 @@
                 @Html.DisplayFor(modelItem => project.OwnerDepartmentId)
             </td>
             <td>
-                @if (project.RelatedDepartments != null) 
+                @if (project.RelatedDepartments != null)
                 {
                     @(string.Join(", ", project.RelatedDepartments.Select(d => d.DepartmentId)));
                 }
