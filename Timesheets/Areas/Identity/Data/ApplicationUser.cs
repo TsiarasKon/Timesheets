@@ -20,14 +20,16 @@ namespace Timesheets.Areas.Identity.Data
         public double ManHourCost { get; set; }
 
         [PersonalData]
-        public long DepartmentId { get; set; }
-        public Department Department { get; set; }
+        public long? DepartmentId { get; set; }
+        public Department? Department { get; set; }
 
         [PersonalData]
         public string? ManagerId { get; set; }
         public ApplicationUser Manager { get; set; }
 
-        public ICollection<Timesheet> Timesheets { get; set; }
-        public ICollection<Department> HeadingDepartments { get; set; }
+        public ICollection<TimesheetEntry> TimesheetEntries { get; set; }
+
+        public long? HeadingDepartmentId { get; set; }
+        public Department? HeadingDepartment { get; set; }
     }
 }

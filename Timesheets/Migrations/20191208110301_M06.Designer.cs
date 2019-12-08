@@ -10,8 +10,8 @@ using Timesheets.Data;
 namespace Timesheets.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20191207203951_M01")]
-    partial class M01
+    [Migration("20191208110301_M06")]
+    partial class M06
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -168,7 +168,7 @@ namespace Timesheets.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("DepartmentId")
+                    b.Property<long?>("DepartmentId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("Email")
@@ -180,6 +180,9 @@ namespace Timesheets.Migrations
 
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<long?>("HeadingDepartmentId")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
@@ -227,6 +230,10 @@ namespace Timesheets.Migrations
 
                     b.HasIndex("DepartmentId");
 
+                    b.HasIndex("HeadingDepartmentId")
+                        .IsUnique()
+                        .HasFilter("[HeadingDepartmentId] IS NOT NULL");
+
                     b.HasIndex("ManagerId");
 
                     b.HasIndex("NormalizedEmail")
@@ -248,14 +255,12 @@ namespace Timesheets.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("DepartmentHeadId")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("DepartmentId");
-
-                    b.HasIndex("DepartmentHeadId");
 
                     b.ToTable("Departments");
                 });
@@ -295,9 +300,9 @@ namespace Timesheets.Migrations
                     b.ToTable("Projects");
                 });
 
-            modelBuilder.Entity("Timesheets.Models.Timesheet", b =>
+            modelBuilder.Entity("Timesheets.Models.TimesheetEntry", b =>
                 {
-                    b.Property<long>("TimesheetId")
+                    b.Property<long>("TimesheetEntryId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -314,13 +319,13 @@ namespace Timesheets.Migrations
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("TimesheetId");
+                    b.HasKey("TimesheetEntryId");
 
                     b.HasIndex("ProjectId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Timesheets");
+                    b.ToTable("TimesheetEntries");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -379,20 +384,16 @@ namespace Timesheets.Migrations
                     b.HasOne("Timesheets.Models.Department", "Department")
                         .WithMany("Users")
                         .HasForeignKey("DepartmentId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("Timesheets.Models.Department", "HeadingDepartment")
+                        .WithOne("DepartmentHead")
+                        .HasForeignKey("Timesheets.Areas.Identity.Data.ApplicationUser", "HeadingDepartmentId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("Timesheets.Areas.Identity.Data.ApplicationUser", "Manager")
                         .WithMany()
                         .HasForeignKey("ManagerId");
-                });
-
-            modelBuilder.Entity("Timesheets.Models.Department", b =>
-                {
-                    b.HasOne("Timesheets.Areas.Identity.Data.ApplicationUser", "DepartmentHead")
-                        .WithMany("HeadingDepartments")
-                        .HasForeignKey("DepartmentHeadId")
-                        .OnDelete(DeleteBehavior.NoAction);
                 });
 
             modelBuilder.Entity("Timesheets.Models.DepartmentProject", b =>
@@ -419,7 +420,7 @@ namespace Timesheets.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Timesheets.Models.Timesheet", b =>
+            modelBuilder.Entity("Timesheets.Models.TimesheetEntry", b =>
                 {
                     b.HasOne("Timesheets.Models.Project", "Project")
                         .WithMany()
@@ -428,7 +429,7 @@ namespace Timesheets.Migrations
                         .IsRequired();
 
                     b.HasOne("Timesheets.Areas.Identity.Data.ApplicationUser", "User")
-                        .WithMany("Timesheets")
+                        .WithMany("TimesheetEntries")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.NoAction);
                 });

@@ -22,7 +22,7 @@ namespace Timesheets.Controllers
             // TODO: check current user and return Timesheets accordingly
             TimesheetsViewModel model = new TimesheetsViewModel
             {
-                Timesheets = _context.Timesheets.ToList(),
+                Timesheets = _context.TimesheetEntries.ToList(),
                 Users = _context.ApplicationUsers.ToList(),
                 Projects = _context.Projects.ToList()
             };
@@ -36,7 +36,7 @@ namespace Timesheets.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(TimesheetDTO timesheetDTO)
+        public IActionResult Create(TimesheetEntryDTO timesheetEntryDTO)
         {
             // IHttpActionResult 
 

@@ -13,7 +13,7 @@ namespace Timesheets.Data
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<Project> Projects { get; set; }
-        public DbSet<Timesheet> Timesheets { get; set; }
+        public DbSet<TimesheetEntry> TimesheetEntries { get; set; }
         public DbSet<DepartmentProject> DepartmentProjects { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
@@ -44,8 +44,8 @@ namespace Timesheets.Data
 
             builder.Entity<Department>()
                 .HasOne(p => p.DepartmentHead)
-                .WithMany(u => u.HeadingDepartments)
-                .HasForeignKey(p => p.DepartmentHeadId)
+                .WithOne(u => u.HeadingDepartment)
+                .HasForeignKey<ApplicationUser>(p => p.HeadingDepartmentId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             builder.Entity<ApplicationUser>()
@@ -54,9 +54,9 @@ namespace Timesheets.Data
                 .HasForeignKey(u => u.DepartmentId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            builder.Entity<Timesheet>()
+            builder.Entity<TimesheetEntry>()
                 .HasOne(t => t.User)
-                .WithMany(u => u.Timesheets)
+                .WithMany(u => u.TimesheetEntries)
                 .HasForeignKey(u => u.UserId)
                 .OnDelete(DeleteBehavior.NoAction);
         }

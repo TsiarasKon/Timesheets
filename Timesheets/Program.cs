@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Timesheets.Areas.Identity.Data;
 using Timesheets.Models;
 
 namespace Timesheets
@@ -19,15 +21,18 @@ namespace Timesheets
 
             using (var scope = host.Services.CreateScope())
             {
-                var services = scope.ServiceProvider;
-
+                var serviceProvider = scope.ServiceProvider;
                 try
                 {
-                    SeedData.Initialize(services);
+                    var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+                    //var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+                    //SeedData.SeedRoles(roleManager);
+                    SeedData.SeedUsers(userManager);
+                    SeedData.SeedRest(serviceProvider);
                 }
                 catch (Exception ex)
                 {
-                    var logger = services.GetRequiredService<ILogger<Program>>();
+                    var logger = serviceProvider.GetRequiredService<ILogger<Program>>();
                     logger.LogError(ex, "An error occurred seeding the DB.");
                 }
             }

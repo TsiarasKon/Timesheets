@@ -6,9 +6,9 @@ using Timesheets.Areas.Identity.Data;
 
 namespace Timesheets.Models
 {
-    public class Timesheet
+    public class TimesheetEntry
     {
-        public long TimesheetId { get; set; }
+        public long TimesheetEntryId { get; set; }
         public DateTime DateCreated { get; set; }
         public int HoursWorked { get; set; }
 

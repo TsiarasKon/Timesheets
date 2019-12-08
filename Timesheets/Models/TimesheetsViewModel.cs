@@ -8,7 +8,7 @@ namespace Timesheets.Models
 {
     public class TimesheetsViewModel
     {
-        public IEnumerable<Timesheet> Timesheets { get; set; }
+        public IEnumerable<TimesheetEntry> Timesheets { get; set; }
         public IEnumerable<ApplicationUser> Users { get; set; }
         public IEnumerable<Project> Projects { get; set; }
     }
