@@ -179,9 +179,6 @@ namespace Timesheets.Migrations
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long?>("HeadingDepartmentId")
-                        .HasColumnType("bigint");
-
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
@@ -228,10 +225,6 @@ namespace Timesheets.Migrations
 
                     b.HasIndex("DepartmentId");
 
-                    b.HasIndex("HeadingDepartmentId")
-                        .IsUnique()
-                        .HasFilter("[HeadingDepartmentId] IS NOT NULL");
-
                     b.HasIndex("ManagerId");
 
                     b.HasIndex("NormalizedEmail")
@@ -253,12 +246,17 @@ namespace Timesheets.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("DepartmentHeadId")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("DepartmentId");
+
+                    b.HasIndex("DepartmentHeadId")
+                        .IsUnique();
 
                     b.ToTable("Departments");
                 });
@@ -384,14 +382,18 @@ namespace Timesheets.Migrations
                         .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.NoAction);
 
-                    b.HasOne("Timesheets.Models.Department", "HeadingDepartment")
-                        .WithOne("DepartmentHead")
-                        .HasForeignKey("Timesheets.Areas.Identity.Data.ApplicationUser", "HeadingDepartmentId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
                     b.HasOne("Timesheets.Areas.Identity.Data.ApplicationUser", "Manager")
                         .WithMany()
                         .HasForeignKey("ManagerId");
+                });
+
+            modelBuilder.Entity("Timesheets.Models.Department", b =>
+                {
+                    b.HasOne("Timesheets.Areas.Identity.Data.ApplicationUser", "DepartmentHead")
+                        .WithOne("HeadingDepartment")
+                        .HasForeignKey("Timesheets.Models.Department", "DepartmentHeadId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Timesheets.Models.DepartmentProject", b =>

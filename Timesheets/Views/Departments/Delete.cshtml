@@ -1,0 +1,46 @@
+﻿@model DepartmentDetailsViewModel
+
+@{
+    ViewData["Title"] = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Delete</h1>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Department</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Department.Name)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Department.Name)
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Department.DepartmentHead)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.DepartmentHead.FirstName) @Html.DisplayFor(model => model.DepartmentHead.LastName)
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Department.OwnedProjects)
+        </dt>
+        <dd class="col-sm-9">
+            @(string.Join(", ", Model.OwnedProjects.Select(p => p.Name)));
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Department.RelatedProjects)
+        </dt>
+        <dd class="col-sm-9">
+            @(string.Join(", ", Model.RelatedProjects.Select(p => p.Name)));
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Department.DepartmentId" />
+        <input type="submit" value="Delete" class="btn btn-danger" />
+        <a class="btn btn-secondary" asp-action="Index">Back to Departments</a>
+    </form>
+</div>

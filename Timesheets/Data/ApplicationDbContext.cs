@@ -45,7 +45,7 @@ namespace Timesheets.Data
             builder.Entity<Department>()
                 .HasOne(p => p.DepartmentHead)
                 .WithOne(u => u.HeadingDepartment)
-                .HasForeignKey<ApplicationUser>(p => p.HeadingDepartmentId)
+                .HasForeignKey<Department>(p => p.DepartmentHeadId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             builder.Entity<ApplicationUser>()
