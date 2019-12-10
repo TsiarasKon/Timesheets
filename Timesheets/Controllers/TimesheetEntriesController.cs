@@ -49,8 +49,16 @@ namespace Timesheets.Controllers
         // GET: TimesheetEntries/Create
         public IActionResult Create()
         {
-            ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId");
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id");
+            //ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId");
+            //ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id");
+
+            ViewBag.Projects = new SelectList(_context.Projects
+           , "ProjectId", "ProjectId");
+
+
+            ViewBag.ApplicationUsers = new SelectList(_context.ApplicationUsers
+               .Select(u => new { FullName = String.Format("{0} {1}", u.FirstName, u.LastName), u.Id })
+               , "Id", "FullName");
             return View();
         }
 
@@ -67,8 +75,15 @@ namespace Timesheets.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId", timesheetEntry.ProjectId);
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", timesheetEntry.UserId);
+            //ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId", timesheetEntry.ProjectId);
+            //ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", timesheetEntry.UserId);
+            ViewBag.Projects = new SelectList(_context.Projects
+         , "ProjectId", "ProjectId");
+
+
+            ViewBag.ApplicationUsers = new SelectList(_context.ApplicationUsers
+               .Select(u => new { FullName = String.Format("{0} {1}", u.FirstName, u.LastName), u.Id })
+               , "Id", "FullName");
             return View(timesheetEntry);
         }
 
@@ -85,8 +100,13 @@ namespace Timesheets.Controllers
             {
                 return NotFound();
             }
-            ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId", timesheetEntry.ProjectId);
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", timesheetEntry.UserId);
+            ViewBag.Projects = new SelectList(_context.Projects
+        , "ProjectId", "ProjectId");
+
+
+            ViewBag.ApplicationUsers = new SelectList(_context.ApplicationUsers
+               .Select(u => new { FullName = String.Format("{0} {1}", u.FirstName, u.LastName), u.Id })
+               , "Id", "FullName");
             return View(timesheetEntry);
         }
 
