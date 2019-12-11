@@ -4,35 +4,71 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>My Timesheets</h1>
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>Timesheets</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="#">Home</a></li>
+                            <li class="breadcrumb-item active">Timesheets</li>
+                        </ol>
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </section>
 
-<table class="table">
-    <tr>
-        <th>Project Name</th>
-        <th>Full Name</th>
-        <th>Timesheet Date</th>
-        <th>Hours Worked</th>
-        <th>Total Cost</th>
-    </tr>
+        <section class="content">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h1 class="card-title">My Timesheets</h1>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th>Project Name</th>
+                                    <th>Full Name</th>
+                                    <th>Timesheet Date</th>
+                                    <th>Hours Worked</th>
+                                    <th>Total Cost</th>
+                                </tr>
 
-    @foreach (var ts in Model.Timesheets)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => ts.Project.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => ts.User.FirstName) @Html.DisplayFor(modelItem => ts.User.LastName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => ts.DateCreated)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => ts.HoursWorked)
-            </td>
-            <td>
-                @(ts.HoursWorked * ts.User.ManHourCost)
-            </td>
-        </tr>
-    }
-</table>
+                                @foreach (var ts in Model.Timesheets)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => ts.Project.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => ts.User.FirstName) @Html.DisplayFor(modelItem => ts.User.LastName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => ts.DateCreated)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => ts.HoursWorked)
+                                        </td>
+                                        <td>
+                                            @(ts.HoursWorked * ts.User.ManHourCost)
+                                        </td>
+                                    </tr>
+                                }
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                    <!-- /.card -->
+                </div>
+                <!-- /.col -->
+            </div>
+
+        </section>
+    </div>

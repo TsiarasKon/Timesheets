@@ -1,0 +1,81 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@model IEnumerable<IdentityRole>
+@{
+    ViewData["Title"] = "ListRoles";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>List All Roles</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="#">Home</a></li>
+                            <li class="breadcrumb-item active">Role Form</li>
+                        </ol>
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </section>
+
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    @if (Model.Any())
+                    {
+                        <div class="col-12">
+                            <a class="btn btn-primary mb-3"
+                                   asp-action="CreateRole"
+                                   asp-controller="Administration">Add new role</a>
+                        </div>
+                        foreach (var role in Model)
+                        {
+                            <!-- left column -->
+                            <div class="col-4">
+                                <!-- general form elements -->
+                                <div class="card card-primary">
+                                    <div class="card-header">
+                                        <h1 class="card-title">Role Name</h1>
+                                    </div>
+                                    <!-- /.card-header -->
+                                    <div class="card-body">
+                                        <h3 class="card-title">@role.Name</h3>
+                                    </div>
+                                    <div class="card-footer">
+                                        <a class="btn btn-primary" asp-action="EditRole"
+                                           asp-controller="Administration" asp-route-id="@role.Id">Edit</a>
+                                        <a href="#" class="btn btn-danger">Delete</a>
+                                    </div>
+                                </div>
+                                <!-- /.card -->
+                            </div>
+                        }
+                    }
+
+                    else
+                    {
+                        <div class="card">
+                            <div class="card-header">
+                                No roles created yet!
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    Use the button to create a role
+                                </h5>
+                                <a class="btn btn-primary"
+                                   asp-controller="administration"
+                                   asp-action="CreateRole">
+                                    Create Role
+                                </a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </section>
+    </div>

@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Timesheets.Data;
 using Timesheets.Models;
+using Timesheets.ViewModels;
 
 namespace Timesheets.Controllers
 {
@@ -32,18 +34,28 @@ namespace Timesheets.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            return View();
+            //ViewBag.ProjectList = _context.Projects
+            //    .OrderBy(u => u.Name)
+            //    .Select(u => new SelectListItem { Text = u.Name, Value = u.ProjectId.ToString() }).ToList();
+            CreateTimesheetEntryViewModel c = new CreateTimesheetEntryViewModel(_context);
+            c.ProjectList = _context.Projects
+                .OrderBy(u => u.Name)
+                .Select(u => new SelectListItem { Text = u.Name, Value = u.ProjectId.ToString() }).ToList();
+
+            c.UserList = _context.ApplicationUsers
+                .Select(u => new SelectListItem { Text = String.Format("{0} {1}", u.FirstName, u.LastName), Value = u.Id.ToString() }).ToList();
+            return View(c);
         }
 
         [HttpPost]
-        public IActionResult Create(TimesheetEntryDTO timesheetEntryDTO)
+        public IActionResult Create(TimesheetEntry data)
         {
-            // IHttpActionResult 
+            if (!ModelState.IsValid)
+                return View();
 
-            //if (!ModelState.IsValid)
-            //    return BadRequest("Invalid data");
-
-            return Ok();
+            _context.TimesheetEntries.Add(data);
+            _context.SaveChanges();
+            return RedirectToAction("Index", "Home");
         }
     }
 }
