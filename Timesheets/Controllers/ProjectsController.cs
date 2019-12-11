@@ -20,10 +20,14 @@ namespace Timesheets.Controllers
         }
 
         // GET: Projects
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            var applicationDbContext = _context.Projects.Include(p => p.OwnerDepartment);
-            return View(await applicationDbContext.ToListAsync());
+            ProjectViewModel model = new ProjectViewModel
+            {
+                Projects = _context.Projects.ToList(),
+                Departments = _context.Departments.ToList()
+            };
+            return View(model);
         }
 
         // GET: Projects/Details/5
@@ -35,20 +39,29 @@ namespace Timesheets.Controllers
             }
 
             var project = await _context.Projects
-                .Include(p => p.OwnerDepartment)
                 .FirstOrDefaultAsync(m => m.ProjectId == id);
             if (project == null)
             {
                 return NotFound();
             }
 
-            return View(project);
+            ProjectDetailsViewModel model = new ProjectDetailsViewModel
+            {
+                Project = project,
+                OwnerDepartment = _context.Departments.FirstOrDefault(d => d.DepartmentId == project.OwnerDepartmentId),
+                RelatedDepartments = _context.Departments.Where(d => d.RelatedProjects.Any(p => p.ProjectId == project.ProjectId)).ToList()
+               
+            };
+
+            return View(model);
         }
 
         // GET: Projects/Create
         public IActionResult Create()
         {
-            ViewData["OwnerDepartmentId"] = new SelectList(_context.Departments, "DepartmentId", "DepartmentId");
+            ViewBag.Departments = new SelectList(_context.Departments
+                .Select(d => new { d.Name, d.DepartmentId })
+                , "DepartmentId", "Name");
             return View();
         }
 
@@ -82,7 +95,9 @@ namespace Timesheets.Controllers
             {
                 return NotFound();
             }
-            ViewData["OwnerDepartmentId"] = new SelectList(_context.Departments, "DepartmentId", "DepartmentId", project.OwnerDepartmentId);
+            ViewBag.Departments = new SelectList(_context.Departments
+                .Select(d => new { d.Name, d.DepartmentId })
+                , "DepartmentId", "Name");
             return View(project);
         }
 

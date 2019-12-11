@@ -8,6 +8,7 @@ namespace Timesheets.Models
     public class Project
     {
         public long ProjectId { get; set; }
+
         public string Name { get; set; }
 
         public ICollection<DepartmentProject> RelatedDepartments { get; set; }
