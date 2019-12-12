@@ -73,6 +73,25 @@ namespace Timesheets.Models
                 //    userManager.AddToRoleAsync(user, "NormalUser").Wait();
                 //}
             }
+            var username4 = "d@d.d";
+            if (userManager.FindByNameAsync(username4).Result == null)
+            {
+                ApplicationUser user = new ApplicationUser()
+                {
+                    UserName = username4,
+                    Email = username4,
+                    FirstName = "D",
+                    LastName = "DC",
+                    ManHourCost = 2,
+                    EmailConfirmed = true
+                };
+
+                IdentityResult result = userManager.CreateAsync(user, "12345^qW").Result;
+                //if (result.Succeeded)
+                //{
+                //    userManager.AddToRoleAsync(user, "NormalUser").Wait();
+                //}
+            }
         }
 
         public static void SeedRest(IServiceProvider serviceProvider)

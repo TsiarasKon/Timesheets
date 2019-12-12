@@ -29,7 +29,6 @@ namespace Timesheets.Areas.Identity.Data
 
         public ICollection<TimesheetEntry> TimesheetEntries { get; set; }
 
-        public long? HeadingDepartmentId { get; set; }
         public Department? HeadingDepartment { get; set; }
     }
 }
