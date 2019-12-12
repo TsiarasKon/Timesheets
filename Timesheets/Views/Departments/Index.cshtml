@@ -1,42 +1,71 @@
 ﻿@model DepartmentsViewModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Department Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>Departments</h1>
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </section>
 
-<p>
-    <a class="btn btn-primary" asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Name
-            </th>
-            <th>
-                Department Head
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Departments) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DepartmentHead.FirstName) @Html.DisplayFor(modelItem => item.DepartmentHead.LastName)
-            </td>
-            <td>
-                <a class="btn btn-primary" asp-action="Edit" asp-route-id="@item.DepartmentId">Edit</a>
-                <a class="btn btn-info" asp-action="Details" asp-route-id="@item.DepartmentId">Details</a>
-                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.DepartmentId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+        <section class="content">
+            <div class="row">
+                <div class="col-xl-10 offset-xl-1">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Departments</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body p-0">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            Name
+                                        </th>
+                                        <th>
+                                            Department Head
+                                        </th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.Departments)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Name)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.DepartmentHead.FirstName) @Html.DisplayFor(modelItem => item.DepartmentHead.LastName)
+                                            </td>
+                                            <td>
+                                                <a class="btn btn-primary fa fa-pen font-weight-bold" asp-action="Edit" asp-route-id="@item.DepartmentId"></a>
+                                                <a class="btn btn-info fa fa-eye font-weight-bold" asp-action="Details" asp-route-id="@item.DepartmentId"></a>
+                                                <a class="btn btn-danger fa fa-trash-alt font-weight-bold" asp-action="Delete" asp-route-id="@item.DepartmentId"></a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xl-10 offset-xl-1">
+                    <a class="btn btn-primary" asp-action="Create">Create New</a>
+                </div>
+            </div>
+        </section>
+    </div>
