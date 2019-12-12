@@ -7,25 +7,30 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Timesheets.Areas.Identity.Data;
 using Timesheets.Data;
+using Timesheets.Models;
 
 namespace Timesheets.Controllers
 {
-    public class ApplicationUserController : Controller
+    public class ApplicationUsersController : Controller
     {
         private readonly ApplicationDbContext _context;
-        public ApplicationUserController(ApplicationDbContext context)
+        public ApplicationUsersController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        //Get:Users
+        //Get:ApplicationUsers
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.ApplicationUsers.Include(p => p.Manager);
-            return View(await applicationDbContext.ToListAsync());
+            ApplicationUsersViewModel model = new ApplicationUsersViewModel
+            {
+                ApplicationUsers=_context.ApplicationUsers.ToList(),
+                TimesheetEntries=_context.TimesheetEntries.ToList()
+            };
+            return View(model);
         }
 
-        //Get:ApplicationUsers/Details
+        //Get:ApplicationUsers/Details/{id}
         public async Task<IActionResult> Details(string? id)
         {
             if (id == null)
@@ -40,20 +45,28 @@ namespace Timesheets.Controllers
             {
                 return NotFound();
             }
-
-            return View(user);
+            ApplicationUsersDetailsViewModel model = new ApplicationUsersDetailsViewModel
+            {
+                ApplicationUser = user,
+                Manager = user.Manager,
+                TimesheetEntries = _context.TimesheetEntries.ToList()
+            };
+            return View(model);
+            
         }
 
         //Get:Users/Create
         public IActionResult Create()
         {
-            ViewData["ManagerId"] = new SelectList(_context.ApplicationUsers, "ApplicationUserId","ApplicationUserId");
+            ViewBag.ApplicationUsers = new SelectList(_context.ApplicationUsers
+                .Select(u => new { FullName = String.Format("{0} {1}", u.FirstName, u.LastName), u.Id })
+                , "Id", "FullName");
             return View();
         }
-
-        //Post:Users/Create
+        //POST:Users/Create
         [HttpPost]
-        public async Task<IActionResult> Create([Bind("ApplicationUserId,Name,ManagerId")] ApplicationUser user)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName")] ApplicationUser user)
         {
             if (ModelState.IsValid)
             {
@@ -61,11 +74,11 @@ namespace Timesheets.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ManagerId"] = new SelectList(_context.ApplicationUsers, "ApplicationUserId", "ApplicationUserId", user.ManagerId);
+           
             return View(user);
         }
 
-        // GET: Users/Edit
+        // GET: Users/Edit/{id}
         public async Task<IActionResult> Edit(string? id)
         {
             if (id == null)
@@ -78,11 +91,13 @@ namespace Timesheets.Controllers
             {
                 return NotFound();
             }
-            ViewData["ManagerId"] = new SelectList(_context.Departments, "ApplicationUserId", "ApplicationUserId", user.ManagerId);
+            ViewBag.ApplicationUsers = new SelectList(_context.ApplicationUsers
+                .Select(u => new { FullName = String.Format("{0} {1}", u.FirstName, u.LastName), u.Id })
+                , "Id", "FullName");
             return View(user);
         }
 
-        // POST: Projects/Edit
+        // POST: Users/Edit/{id}
         [HttpPost]
 
         public async Task<IActionResult> Edit(string id, [Bind("ApplicationUserId,Name,ManagerId")] ApplicationUser user)
@@ -112,11 +127,11 @@ namespace Timesheets.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ManagerId"] = new SelectList(_context.ApplicationUsers, "ApplicationUserId", "ApplicationUserId", user.ManagerId);
+            
             return View(user);
         }
 
-        // GET: Users/Delete
+        // GET: Users/Delete/{id}
         public async Task<IActionResult> Delete(string? id)
         {
             if (id == null)
@@ -131,13 +146,20 @@ namespace Timesheets.Controllers
             {
                 return NotFound();
             }
+            ApplicationUsersDetailsViewModel model = new ApplicationUsersDetailsViewModel
+            {
+                ApplicationUser = user,
+                Manager = user.Manager,
+                TimesheetEntries = _context.TimesheetEntries
+            };
 
-            return View(user);
+
+            return View(model);
         }
 
-        // POST: Users/Delete
+        // POST: Users/Delete/{id}
         [HttpPost, ActionName("Delete")]
-  
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
             var user = await _context.ApplicationUsers.FindAsync(id);
