@@ -421,7 +421,7 @@ namespace Timesheets.Migrations
             modelBuilder.Entity("Timesheets.Models.TimesheetEntry", b =>
                 {
                     b.HasOne("Timesheets.Models.Project", "Project")
-                        .WithMany()
+                        .WithMany("TimesheetEntries")
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

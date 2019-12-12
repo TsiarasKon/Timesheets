@@ -10,8 +10,8 @@ using Timesheets.Data;
 namespace Timesheets.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20191208110301_M06")]
-    partial class M06
+    [Migration("20191211191522_starbucks3")]
+    partial class starbucks3
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -423,7 +423,7 @@ namespace Timesheets.Migrations
             modelBuilder.Entity("Timesheets.Models.TimesheetEntry", b =>
                 {
                     b.HasOne("Timesheets.Models.Project", "Project")
-                        .WithMany()
+                        .WithMany("TimesheetEntries")
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

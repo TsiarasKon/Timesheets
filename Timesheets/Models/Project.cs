@@ -15,5 +15,7 @@ namespace Timesheets.Models
 
         public long OwnerDepartmentId { get; set; }
         public Department OwnerDepartment { get; set; }
+
+        public ICollection<TimesheetEntry> TimesheetEntries { get; set; }
     }
 }

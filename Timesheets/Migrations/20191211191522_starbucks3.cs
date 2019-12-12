@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Timesheets.Migrations
 {
-    public partial class M06 : Migration
+    public partial class starbucks3 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
