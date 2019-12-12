@@ -10,11 +10,11 @@ using Timesheets.ViewModels;
 
 namespace Timesheets.Controllers
 {
-    public class TimesheetsController : Controller
+    public class TimesheetsControllerold : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public TimesheetsController(ApplicationDbContext context)
+        public TimesheetsControllerold(ApplicationDbContext context)
         {
             _context = context;
         }
