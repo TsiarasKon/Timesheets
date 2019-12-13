@@ -20,12 +20,26 @@ namespace Timesheets.Controllers
         }
 
         // GET: Departments
-        public IActionResult Index(string sortOrder)
+        public IActionResult Index(string sortOrder, string searchString)
         {
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewBag.DepartmentHeadSortParm = sortOrder == "deptHead_asc" ? "deptHead_desc" : "deptHead_asc";
 
             IEnumerable<Department> deptList = _context.Departments.Include(d => d.DepartmentHead);
+            if (String.IsNullOrEmpty(searchString))
+            {
+                searchString = ViewBag.SearchString;
+            }
+            else
+            {
+                ViewBag.SearchString = searchString;
+            }
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                deptList = deptList.Where(d => d.Name.Contains(searchString, StringComparison.CurrentCultureIgnoreCase)
+                                       || d.DepartmentHead.FirstName.Contains(searchString, StringComparison.CurrentCultureIgnoreCase)
+                                       || d.DepartmentHead.LastName.Contains(searchString, StringComparison.CurrentCultureIgnoreCase));
+            }
             switch (sortOrder)
             {
                 case "deptHead_asc":

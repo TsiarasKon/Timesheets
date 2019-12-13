@@ -28,21 +28,35 @@ namespace Timesheets.Controllers
         }
 
         // GET: TimesheetEntries
-        public async Task<IActionResult> Index(string sortOrder)
+        public async Task<IActionResult> Index(string sortOrder, string searchString)
         {
             if (! User.Identity.IsAuthenticated)
             {
                 return new ChallengeResult();
             }
 
-            IEnumerable<TimesheetEntry> timesheetList = _context.TimesheetEntries.
-                Where(t => t.UserId == User.FindFirst(ClaimTypes.NameIdentifier).Value).
-                Include(t => t.Project).Include(t => t.User);
-
             ViewBag.DateSortParm = String.IsNullOrEmpty(sortOrder) ? "date_desc" : "";
             ViewBag.HoursWorkedSortParm = sortOrder == "hoursWorked_asc" ? "hoursWorked_desc" : "hoursWorked_asc";
             ViewBag.UserNameSortParm = sortOrder == "userName_asc" ? "userName_desc" : "userName_asc";
             ViewBag.ProjectSortParm = sortOrder == "project_asc" ? "project_desc" : "project_asc";
+
+            IEnumerable<TimesheetEntry> timesheetList = _context.TimesheetEntries.
+                Where(t => t.UserId == User.FindFirst(ClaimTypes.NameIdentifier).Value).
+                Include(t => t.Project).Include(t => t.User);
+            if (String.IsNullOrEmpty(searchString))
+            {
+                searchString = ViewBag.SearchString;
+            }
+            else
+            {
+                ViewBag.SearchString = searchString;
+            }
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                timesheetList = timesheetList.Where(t => t.Project.Name.Contains(searchString, StringComparison.CurrentCultureIgnoreCase)
+                                       || t.User.FirstName.Contains(searchString, StringComparison.CurrentCultureIgnoreCase)
+                                       || t.User.LastName.Contains(searchString, StringComparison.CurrentCultureIgnoreCase));
+            }
             switch (sortOrder)
             {
                 case "hoursWorked_asc":

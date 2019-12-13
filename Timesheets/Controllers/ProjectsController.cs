@@ -20,12 +20,24 @@ namespace Timesheets.Controllers
         }
 
         // GET: Projects
-        public IActionResult Index(string sortOrder)
+        public IActionResult Index(string sortOrder, string searchString)
         {
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewBag.OwnerDepartmentSortParm = sortOrder == "deptOwner_asc" ? "deptOwner_desc" : "deptOwner_asc";
 
             IEnumerable<Project> projectList = _context.Projects.Include(p => p.OwnerDepartment);
+            if (String.IsNullOrEmpty(searchString))
+            {
+                searchString = ViewBag.SearchString;
+            } else
+            {
+                ViewBag.SearchString = searchString;
+            }
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                projectList = projectList.Where(p => p.Name.Contains(searchString, StringComparison.CurrentCultureIgnoreCase)
+                                       || p.OwnerDepartment.Name.Contains(searchString, StringComparison.CurrentCultureIgnoreCase));
+            }
             switch (sortOrder)
             {
                 case "deptOwner_asc":
