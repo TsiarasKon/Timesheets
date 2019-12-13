@@ -10,20 +10,34 @@ using Timesheets.Data;
 
 namespace Timesheets.Controllers
 {
-    public class ApplicationUsersController : Controller
+    public class UsersController : Controller
     {
         private readonly ApplicationDbContext _context;
-        public ApplicationUsersController(ApplicationDbContext context)
+        public UsersController(ApplicationDbContext context)
         {
             _context = context;
         }
 
         //Get:Users
-        [Route("/Users")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString)
         {
-            var applicationDbContext = _context.ApplicationUsers.Include(p => p.Manager);
-            return View(await applicationDbContext.ToListAsync());
+            IEnumerable<ApplicationUser> userList = _context.ApplicationUsers.Include(p => p.Manager);
+            if (String.IsNullOrEmpty(searchString))
+            {
+                searchString = ViewBag.SearchString;
+            }
+            else
+            {
+                ViewBag.SearchString = searchString;
+            }
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                userList = userList.Where(u => u.UserName.Contains(searchString, StringComparison.CurrentCultureIgnoreCase)
+                                       || u.Email.Contains(searchString, StringComparison.CurrentCultureIgnoreCase)
+                                       || u.FirstName.Contains(searchString, StringComparison.CurrentCultureIgnoreCase)
+                                       || u.LastName.Contains(searchString, StringComparison.CurrentCultureIgnoreCase));
+            }
+            return View(userList.ToList());
         }
 
         //Get:ApplicationUsers/Details
@@ -46,7 +60,7 @@ namespace Timesheets.Controllers
         }
 
         //Get:Users/Create
-        [HttpGet("/Users/Add")]
+        [HttpGet]
         public IActionResult Create()
         {
             //ViewData["ManagerId"] = new SelectList(_context.ApplicationUsers, "ApplicationUserId","ApplicationUserId");
@@ -54,7 +68,7 @@ namespace Timesheets.Controllers
         }
 
         //Post:Users/Create
-        [HttpPost("/Users/Add")]
+        [HttpPost]
         public async Task<IActionResult> Create([Bind("ApplicationUserId,Name,ManagerId")] ApplicationUser user)
         {
             if (ModelState.IsValid)
@@ -68,7 +82,6 @@ namespace Timesheets.Controllers
         }
 
         // GET: Users/Edit
-        [Route("/Users/Edit/")]
         public async Task<IActionResult> Edit(string? id)
         {
             if (id == null)
@@ -86,20 +99,26 @@ namespace Timesheets.Controllers
         }
 
         // POST: Users/Edit
-        [HttpPost("/Users/Edit/"), ActionName("Edit")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("ApplicationUserId,Name,ManagerId")] ApplicationUser user)
+        public async Task<IActionResult> Edit(string id, ApplicationUser user)
         {
             if (id != user.Id)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (!String.IsNullOrEmpty(user.FirstName) && !String.IsNullOrEmpty(user.LastName) 
+                && !String.IsNullOrEmpty(user.Email) && user.ManHourCost > 0)
             {
                 try
                 {
-                    _context.Update(user);
+                    var oldUser = await _context.ApplicationUsers.FindAsync(id);
+                    oldUser.FirstName = user.FirstName;
+                    oldUser.LastName = user.LastName;
+                    oldUser.Email = user.Email;
+                    oldUser.ManHourCost = user.ManHourCost;
+                    _context.Update(oldUser);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -120,7 +139,6 @@ namespace Timesheets.Controllers
         }
 
         // GET: Users/Delete
-        [Route("/Users/Delete/")]
         public async Task<IActionResult> Delete(string? id)
         {
             if (id == null)
@@ -140,7 +158,7 @@ namespace Timesheets.Controllers
         }
 
         // POST: Users/Delete
-        [HttpPost("/Users/Delete/"), ActionName("Delete")]
+        [HttpPost]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
             var user = await _context.ApplicationUsers.FindAsync(id);

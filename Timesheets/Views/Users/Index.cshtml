@@ -17,6 +17,12 @@
 
         <section class="content">
             <div class="container-fluid">
+                <form asp-action="Index" method="get">
+                    <p>
+                        Filter Users: <input type="text" name="searchString" value="@ViewBag.SearchString">
+                        <input type="submit" value="Filter" />
+                    </p>
+                </form>
                 <div class="row">
                     @foreach (var item in Model)
                     {
@@ -45,7 +51,7 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                         </div>
                     }
                 </div>
