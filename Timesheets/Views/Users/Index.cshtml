@@ -6,23 +6,33 @@
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <section class="content-header">
+            <div class="container-fluid">
                 <div class="row">
-                    <div class="col-sm-6">
-                        <a class="btn btn-primary" asp-action="Create"> 
-                        <div class="fa fa-user-plus fa-2x"></div> Add
+                    <div class="col-12 form-group">
+                        <a class="btn btn-primary" href="../../Identity/Account/Register">
+                            <div class="fa fa-user-plus fa-2x"></div> Add
                         </a>
                     </div>
+                    <div class="col-12">
+                        <div class="card-tools">
+                            <form asp-action="Index" method="get">
+                                <div class="input-group input-group-sm" style="width: 150px;">
+
+                                    <input type="text" name="searchString" value="@ViewBag.SearchString" placeholder="Filter Users" aria-label="Filter" class="form-control float-right">
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
+                                    </div>
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
+            </div>
         </section>
 
         <section class="content">
             <div class="container-fluid">
-                <form asp-action="Index" method="get">
-                    <p>
-                        Filter Users: <input type="text" name="searchString" value="@ViewBag.SearchString">
-                        <input type="submit" value="Filter" />
-                    </p>
-                </form>
                 <div class="row">
                     @foreach (var item in Model)
                     {
@@ -39,7 +49,7 @@
                                     </div>
                                     <div class="row">
                                         <div class="col text-center">
-                                            <button class="btn btn-primary"><div class="fa fa-at"></div> @Html.DisplayFor(modelItem => item.Email)</button>
+                                            <button class="btn btn-dark"><div class="fa fa-at"></div> @Html.DisplayFor(modelItem => item.Email)</button>
                                         </div>
                                     </div>
                                 </div>
@@ -47,6 +57,7 @@
                                 <div class="card-footer">
                                     <div class="col text-center">
                                         <a class="btn btn-primary fa fa-pen font-weight-bold" asp-action="Edit" asp-route-id="@item.Id"></a>
+                                        <a class="btn btn-info fa fa-eye font-weight-bold" asp-action="Details" asp-route-id="@item.Id"></a>
                                         <a class="btn btn-danger fa fa-trash-alt font-weight-bold" asp-action="Delete" asp-route-id="@item.Id"></a>
                                     </div>
                                 </div>

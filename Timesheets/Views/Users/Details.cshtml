@@ -40,10 +40,16 @@
                                     @Html.DisplayFor(model => model.FullName)
                                 </dd>
                                 <dt class="col-sm-2">
-                                    @Html.DisplayNameFor(model => model.Manager)
+                                    @Html.DisplayNameFor(model => model.Email)
                                 </dt>
                                 <dd class="col-sm-10">
-                                    @Html.DisplayFor(model => model.Manager.ManagerId)
+                                    @Html.DisplayFor(model => model.Email)
+                                </dd>
+                                <dt class="col-sm-2">
+                                    @Html.DisplayNameFor(model => model.ManHourCost)
+                                </dt>
+                                <dd class="col-sm-10">
+                                    @Html.DisplayFor(model => model.ManHourCost)
                                 </dd>
                             </dl>
                             <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>

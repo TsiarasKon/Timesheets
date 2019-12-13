@@ -52,10 +52,7 @@ namespace Timesheets.Controllers
             //ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId");
             //ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id");
 
-            ViewBag.Projects = new SelectList(_context.Projects
-           , "ProjectId", "ProjectId");
-
-
+            ViewBag.Projects = new SelectList(_context.Projects, "ProjectId", "Name");
             ViewBag.ApplicationUsers = new SelectList(_context.ApplicationUsers
                .Select(u => new { FullName = String.Format("{0} {1}", u.FirstName, u.LastName), u.Id })
                , "Id", "FullName");
@@ -67,9 +64,14 @@ namespace Timesheets.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("TimesheetEntryId,DateCreated,HoursWorked,UserId,ProjectId")] TimesheetEntry timesheetEntry)
+        public async Task<IActionResult> Create(TimesheetEntry timesheetEntry)
         {
-            if (ModelState.IsValid)
+            var justCheck = _context.TimesheetEntries
+                .Where(t => t.DateCreated.Date == timesheetEntry.DateCreated.Date && t.ProjectId == timesheetEntry.ProjectId).FirstOrDefault();
+
+            //var applicationDbContext = _context.TimesheetEntries.Include(t => t.Project).Include(t => t.User);
+            //    return View(await applicationDbContext.ToListAsync());
+            if (ModelState.IsValid && justCheck == null && timesheetEntry.HoursWorked > 0)
             {
                 _context.Add(timesheetEntry);
                 await _context.SaveChangesAsync();
@@ -77,10 +79,7 @@ namespace Timesheets.Controllers
             }
             //ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId", timesheetEntry.ProjectId);
             //ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", timesheetEntry.UserId);
-            ViewBag.Projects = new SelectList(_context.Projects
-         , "ProjectId", "ProjectId");
-
-
+            ViewBag.Projects = new SelectList(_context.Projects, "ProjectId", "Name");
             ViewBag.ApplicationUsers = new SelectList(_context.ApplicationUsers
                .Select(u => new { FullName = String.Format("{0} {1}", u.FirstName, u.LastName), u.Id })
                , "Id", "FullName");
@@ -100,10 +99,8 @@ namespace Timesheets.Controllers
             {
                 return NotFound();
             }
-            ViewBag.Projects = new SelectList(_context.Projects
-        , "ProjectId", "ProjectId");
 
-
+            ViewBag.Projects = new SelectList(_context.Projects, "ProjectId", "Name");
             ViewBag.ApplicationUsers = new SelectList(_context.ApplicationUsers
                .Select(u => new { FullName = String.Format("{0} {1}", u.FirstName, u.LastName), u.Id })
                , "Id", "FullName");
@@ -115,18 +112,20 @@ namespace Timesheets.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("TimesheetEntryId,DateCreated,HoursWorked,UserId,ProjectId")] TimesheetEntry timesheetEntry)
+        public async Task<IActionResult> Edit(long id, TimesheetEntry timesheetEntry)
         {
             if (id != timesheetEntry.TimesheetEntryId)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (timesheetEntry.HoursWorked > 0)
             {
                 try
                 {
-                    _context.Update(timesheetEntry);
+                    var oldTimesheetEntry = _context.TimesheetEntries.SingleOrDefault(x => x.TimesheetEntryId == id);
+                    oldTimesheetEntry.HoursWorked = timesheetEntry.HoursWorked;
+                    _context.Update(oldTimesheetEntry);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
