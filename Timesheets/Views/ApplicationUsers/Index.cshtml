@@ -3,6 +3,57 @@
     ViewData["Title"] = "Index";
 }
 
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <a class="btn btn-primary" asp-action="Create"> 
+                        <div class="fa fa-user-plus fa-2x"></div> Add
+                        </a>
+                    </div>
+                </div>
+        </section>
+
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    @foreach (var item in Model)
+                    {
+                        <div class="col-2 form-group">
+
+                            <div class="card card-primary">
+                                <div class="card-header">
+                                    <h3 class="card-title align-content-center">@Html.DisplayFor(modelItem => item.FullName)</h3>
+                                </div>
+                                <!-- /.card-header -->
+                                <div class="card-body">
+                                    <div class="row form-group">
+                                        <img class="img-fluid img-circle" src="~/theme/dist/img/standart-user-image.png" />
+                                    </div>
+                                    <div class="row">
+                                        <div class="col text-center">
+                                            <button class="btn btn-primary"><div class="fa fa-at"></div> @Html.DisplayFor(modelItem => item.Email)</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /.card-body -->
+                                <div class="card-footer">
+                                    <div class="col text-center">
+                                        <a class="btn btn-primary fa fa-pen font-weight-bold" asp-action="Edit" asp-route-id="@item.Id"></a>
+                                        <a class="btn btn-danger fa fa-trash-alt font-weight-bold" asp-action="Delete" asp-route-id="@item.Id"></a>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    }
+                </div>
+            </div>
+        </section>
+    </div>
+
+
 <h1>Index</h1>
 <p>
     <a asp-action="Create">Create New</a>
@@ -14,7 +65,7 @@
                 @Html.DisplayNameFor(model => model.FullName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Manager)
+                @Html.DisplayNameFor(model => model.Email)
             </th>
             <th></th>
         </tr>
@@ -27,11 +78,10 @@
                     @Html.DisplayFor(modelItem => item.FullName)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Manager.ManagerId)
+                    @Html.DisplayFor(modelItem => item.Email)
                 </td>
                 <td>
                     <a class="fa fa-pencil action_buttons" asp-action="Edit" asp-route-id="@item.Id" aria-hidden="true"></a>
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a>
                     <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                 </td>
             </tr>

@@ -10,15 +10,16 @@ using Timesheets.Data;
 
 namespace Timesheets.Controllers
 {
-    public class ApplicationUserController : Controller
+    public class ApplicationUsersController : Controller
     {
         private readonly ApplicationDbContext _context;
-        public ApplicationUserController(ApplicationDbContext context)
+        public ApplicationUsersController(ApplicationDbContext context)
         {
             _context = context;
         }
 
         //Get:Users
+        [Route("/Users")]
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.ApplicationUsers.Include(p => p.Manager);
@@ -45,14 +46,15 @@ namespace Timesheets.Controllers
         }
 
         //Get:Users/Create
+        [HttpGet("/Users/Add")]
         public IActionResult Create()
         {
-            ViewData["ManagerId"] = new SelectList(_context.ApplicationUsers, "ApplicationUserId","ApplicationUserId");
+            //ViewData["ManagerId"] = new SelectList(_context.ApplicationUsers, "ApplicationUserId","ApplicationUserId");
             return View();
         }
 
         //Post:Users/Create
-        [HttpPost]
+        [HttpPost("/Users/Add")]
         public async Task<IActionResult> Create([Bind("ApplicationUserId,Name,ManagerId")] ApplicationUser user)
         {
             if (ModelState.IsValid)
@@ -61,11 +63,12 @@ namespace Timesheets.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ManagerId"] = new SelectList(_context.ApplicationUsers, "ApplicationUserId", "ApplicationUserId", user.ManagerId);
+            //ViewData["ManagerId"] = new SelectList(_context.ApplicationUsers, "ApplicationUserId", "ApplicationUserId", user.ManagerId);
             return View(user);
         }
 
         // GET: Users/Edit
+        [Route("/Users/Edit/")]
         public async Task<IActionResult> Edit(string? id)
         {
             if (id == null)
@@ -82,9 +85,9 @@ namespace Timesheets.Controllers
             return View(user);
         }
 
-        // POST: Projects/Edit
-        [HttpPost]
-
+        // POST: Users/Edit
+        [HttpPost("/Users/Edit/"), ActionName("Edit")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, [Bind("ApplicationUserId,Name,ManagerId")] ApplicationUser user)
         {
             if (id != user.Id)
@@ -117,6 +120,7 @@ namespace Timesheets.Controllers
         }
 
         // GET: Users/Delete
+        [Route("/Users/Delete/")]
         public async Task<IActionResult> Delete(string? id)
         {
             if (id == null)
@@ -136,8 +140,7 @@ namespace Timesheets.Controllers
         }
 
         // POST: Users/Delete
-        [HttpPost, ActionName("Delete")]
-  
+        [HttpPost("/Users/Delete/"), ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
             var user = await _context.ApplicationUsers.FindAsync(id);
