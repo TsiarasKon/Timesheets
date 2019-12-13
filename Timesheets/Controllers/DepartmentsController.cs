@@ -20,18 +20,32 @@ namespace Timesheets.Controllers
         }
 
         // GET: Departments
-        public IActionResult Index()
+        public IActionResult Index(string sortOrder)
         {
-            DepartmentsViewModel model = new DepartmentsViewModel
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewBag.DepartmentHeadSortParm = sortOrder == "deptHead_asc" ? "deptHead_desc" : "deptHead_asc";
+
+            IEnumerable<Department> deptList = _context.Departments.Include(d => d.DepartmentHead);
+            switch (sortOrder)
             {
-                Departments = _context.Departments.ToList(),
-                Users = _context.ApplicationUsers.ToList()
-            };
-            return View(model);
+                case "deptHead_asc":
+                    deptList = deptList.OrderBy(d => d.DepartmentHead.FirstName);
+                    break;
+                case "deptHead_desc":
+                    deptList = deptList.OrderByDescending(d => d.DepartmentHead.FirstName);
+                    break;
+                case "name_desc":
+                    deptList = deptList.OrderByDescending(d => d.Name);
+                    break;
+                default:
+                    deptList = deptList.OrderBy(d => d.Name);
+                    break;
+            }
+            return View(deptList.ToList());
         }
 
-        // GET: Departments/Details/5
-        public async Task<IActionResult> Details(long? id)
+            // GET: Departments/Details/5
+            public async Task<IActionResult> Details(long? id)
         {
             if (id == null)
             {
@@ -66,8 +80,6 @@ namespace Timesheets.Controllers
         }
 
         // POST: Departments/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("DepartmentId,Name,DepartmentHeadId")] Department department)
@@ -78,6 +90,10 @@ namespace Timesheets.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewBag.ApplicationUsers = new SelectList(_context.ApplicationUsers
+                .Where(u => u.HeadingDepartment == null)
+                .Select(u => new { FullName = String.Format("{0} {1}", u.FirstName, u.LastName), u.Id })
+                , "Id", "FullName");
             return View(department);
         }
 
@@ -102,8 +118,6 @@ namespace Timesheets.Controllers
         }
 
         // POST: Departments/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(long id, [Bind("DepartmentId,Name,DepartmentHeadId")] Department department)
@@ -133,6 +147,10 @@ namespace Timesheets.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewBag.ApplicationUsers = new SelectList(_context.ApplicationUsers
+                .Where(u => u.HeadingDepartment == null || u.HeadingDepartment.DepartmentId == id)
+                .Select(u => new { FullName = String.Format("{0} {1}", u.FirstName, u.LastName), u.Id })
+                , "Id", "FullName");
             return View(department);
         }
 

@@ -1,4 +1,4 @@
-﻿@model ProjectViewModel
+﻿@model IEnumerable<Project>
 
 @{
     ViewData["Title"] = "Index";
@@ -31,16 +31,16 @@
                             <thead>
                                 <tr>
                                     <th>
-                                        Name
+                                        @Html.DisplayNameFor(model => model.Name) @Html.ActionLink("", "Index", new { sortOrder = ViewBag.NameSortParm }, new { @class = "fas fa-sort" })
                                     </th>
                                     <th>
-                                        Owner Department
+                                        @Html.DisplayNameFor(model => model.OwnerDepartment) @Html.ActionLink("", "Index", new { sortOrder = ViewBag.OwnerDepartmentSortParm }, new { @class = "fas fa-sort" })
                                     </th>
                                     <th></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var item in Model.Projects)
+                                @foreach (var item in Model)
                                 {
                                     <tr>
                                         <td>

@@ -1,4 +1,4 @@
-﻿@model DepartmentsViewModel
+﻿@model IEnumerable<Department>
 
 @{
     ViewData["Title"] = "Department Index";
@@ -30,16 +30,16 @@
                                 <thead>
                                     <tr>
                                         <th>
-                                            Name
+                                            @Html.DisplayNameFor(model => model.Name) @Html.ActionLink("", "Index", new { sortOrder = ViewBag.NameSortParm }, new { @class = "fas fa-sort" })
                                         </th>
                                         <th>
-                                            Department Head
+                                            @Html.DisplayNameFor(model => model.DepartmentHead) @Html.ActionLink("", "Index", new { sortOrder = ViewBag.DepartmentHeadSortParm }, new { @class = "fas fa-sort" })
                                         </th>
                                         <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach (var item in Model.Departments)
+                                    @foreach (var item in Model)
                                     {
                                         <tr>
                                             <td>

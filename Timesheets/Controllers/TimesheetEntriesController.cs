@@ -28,17 +28,49 @@ namespace Timesheets.Controllers
         }
 
         // GET: TimesheetEntries
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder)
         {
             if (! User.Identity.IsAuthenticated)
             {
                 return new ChallengeResult();
             }
 
-            var timesheetList = _context.TimesheetEntries.
+            IEnumerable<TimesheetEntry> timesheetList = _context.TimesheetEntries.
                 Where(t => t.UserId == User.FindFirst(ClaimTypes.NameIdentifier).Value).
                 Include(t => t.Project).Include(t => t.User);
-            return View(await timesheetList.ToListAsync());
+
+            ViewBag.DateSortParm = String.IsNullOrEmpty(sortOrder) ? "date_desc" : "";
+            ViewBag.HoursWorkedSortParm = sortOrder == "hoursWorked_asc" ? "hoursWorked_desc" : "hoursWorked_asc";
+            ViewBag.UserNameSortParm = sortOrder == "userName_asc" ? "userName_desc" : "userName_asc";
+            ViewBag.ProjectSortParm = sortOrder == "project_asc" ? "project_desc" : "project_asc";
+            switch (sortOrder)
+            {
+                case "hoursWorked_asc":
+                    timesheetList = timesheetList.OrderBy(t => t.HoursWorked);
+                    break;
+                case "hoursWorked_desc":
+                    timesheetList = timesheetList.OrderByDescending(t => t.HoursWorked);
+                    break;
+                case "userName_asc":
+                    timesheetList = timesheetList.OrderBy(t => t.User.FirstName);
+                    break;
+                case "userName_desc":
+                    timesheetList = timesheetList.OrderByDescending(t => t.User.FirstName);
+                    break;
+                case "project_asc":
+                    timesheetList = timesheetList.OrderBy(t => t.Project.Name);
+                    break;
+                case "project_desc":
+                    timesheetList = timesheetList.OrderByDescending(t => t.Project.Name);
+                    break;
+                case "date_desc":
+                    timesheetList = timesheetList.OrderByDescending(t => t.DateCreated);
+                    break;
+                default:
+                    timesheetList = timesheetList.OrderBy(t => t.DateCreated);
+                    break;
+            }
+            return View(timesheetList.ToList());
         }
 
         // GET: TimesheetEntries/Details/5

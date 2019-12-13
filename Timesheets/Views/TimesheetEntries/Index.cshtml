@@ -29,16 +29,16 @@
                                 <thead>
                                     <tr>
                                         <th>
-                                            @Html.DisplayNameFor(model => model.DateCreated)
+                                            @Html.DisplayNameFor(model => model.DateCreated) @Html.ActionLink("", "Index", new { sortOrder = ViewBag.DateSortParm }, new { @class = "fas fa-sort" })
                                         </th>
                                         <th>
-                                            @Html.DisplayNameFor(model => model.HoursWorked)
+                                            @Html.DisplayNameFor(model => model.HoursWorked) @Html.ActionLink("", "Index", new { sortOrder = ViewBag.HoursWorkedSortParm }, new { @class = "fas fa-sort" })
                                         </th>
                                         <th>
-                                            @Html.DisplayNameFor(model => model.User)
+                                            @Html.DisplayNameFor(model => model.User) @Html.ActionLink("", "Index", new { sortOrder = ViewBag.UserNameSortParm }, new { @class = "fas fa-sort" })
                                         </th>
                                         <th>
-                                            @Html.DisplayNameFor(model => model.Project)
+                                            @Html.DisplayNameFor(model => model.Project) @Html.ActionLink("", "Index", new { sortOrder = ViewBag.ProjectSortParm }, new { @class = "fas fa-sort" })
                                         </th>
                                         <th></th>
                                     </tr>
@@ -54,7 +54,7 @@
                                                 @Html.DisplayFor(modelItem => item.HoursWorked)
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.User.FirstName)  @Html.DisplayFor(modelItem => item.User.LastName)
+                                                @Html.DisplayFor(modelItem => item.User.FirstName) @Html.DisplayFor(modelItem => item.User.LastName)
                                             </td>
                                             <td>
                                                 @Html.DisplayFor(modelItem => item.Project.Name)
