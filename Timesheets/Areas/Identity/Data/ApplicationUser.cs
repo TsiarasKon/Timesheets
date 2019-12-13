@@ -15,6 +15,8 @@ namespace Timesheets.Areas.Identity.Data
 
         [PersonalData]
         public string LastName { get; set; }
+        [PersonalData]
+        public string FullName { get { return $"{FirstName} {LastName}"; } }
 
         [PersonalData]
         public double ManHourCost { get; set; }
