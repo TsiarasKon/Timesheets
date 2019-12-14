@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,12 @@ using Timesheets.Data;
 
 namespace Timesheets.Controllers
 {
+    public class Stats
+    {
+        public string ProjectName { get; set; }
+        public double ProjectCost { get; set; }
+    }
+
     public class ChartsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -18,40 +25,39 @@ namespace Timesheets.Controllers
             _context = context;
         }
 
+
         public IActionResult Index()
         {
             return View();
         }
 
-        /*        [HttpGet]
-                public IActionResult GetProjectsPerTime()
-                {
-                    var costPerDept = _context.Departments
-                        .OrderByDescending(d => d.Name)
-                        .Select(d => new
-                        {
-                            Name = d.Name,
-                            Users = d.Users.AsQueryable().Sum(h => h.ManHourCost)
-                        }).ToList();
-
-
-                    return Json(costPerDept);
-                }*/
-
         [HttpGet]
-        public IActionResult GetProjectsPerTime()
+        public ActionResult GetProjectsPerTime()
         {
-            var costPerDept = _context.Departments
-                .AsEnumerable()
-                .GroupBy(x => x.Name)
-                .Select(g => new
+            List<Stats> results = new List<Stats>();
+
+            string query = @"select p.Name as ProjectName, sum(ts.HoursWorked * u.ManHourCost) as ProjectCost
+                            from TimesheetEntries ts
+                            inner
+                            join Projects p on ts.ProjectId = p.ProjectId
+                            inner
+                            join AspNetUsers u on ts.UserId = u.Id
+                            group by p.Name";
+
+            using (var command = _context.Database.GetDbConnection().CreateCommand())
+            {
+                command.CommandText = query;
+                _context.Database.OpenConnection();
+                using var reader = command.ExecuteReader();
+                while (reader.Read())
                 {
-                    Name = g.Key,
-                    Total = g.Sum(u => u.Users.Sum(c => c.ManHourCost))
+                    results.Add(new Stats { ProjectName = reader.GetString(0), ProjectCost = reader.GetDouble(1) });
+                }
+            }
 
-                }).ToList();
 
-            return Json(costPerDept);
+            return Json(results.ToList());
+
         }
 
         [HttpGet]

@@ -60,34 +60,11 @@
                          </li>
                          @if (User.IsInRole("Administrator") || User.IsInRole("Manager"))
                          {
-                             <li class="nav-item has-treeview">
-                                 <a href="#" class="nav-link">
+                             <li class="nav-item">
+                                 <a asp-controller="Charts" asp-action="Index" class="nav-link">
                                      <i class="nav-icon fas fa-chart-pie"></i>
-                                     <p>
-                                         Charts
-                                         <i class="right fas fa-angle-left"></i>
-                                     </p>
+                                     <p>Charts</p>
                                  </a>
-                                 <ul class="nav nav-treeview">
-                                     <li class="nav-item">
-                                         <a asp-controller="Charts" asp-action="Index" class="nav-link">
-                                             <i class="far fa-circle nav-icon"></i>
-                                             <p>Pie Chart</p>
-                                         </a>
-                                     </li>
-                                     <li class="nav-item">
-                                         <a href="../charts/flot.html" class="nav-link">
-                                             <i class="far fa-circle nav-icon"></i>
-                                             <p>Bar Chart</p>
-                                         </a>
-                                     </li>
-                                     <li class="nav-item">
-                                         <a href="../charts/inline.html" class="nav-link">
-                                             <i class="far fa-circle nav-icon"></i>
-                                             <p>Line Chart</p>
-                                         </a>
-                                     </li>
-                                 </ul>
                              </li>
                          }
                          @if (User.Identity.IsAuthenticated)
@@ -167,7 +144,7 @@
                              </li>
                              <li class="nav-item">
                                  <a href="#" class="nav-link">
-                                     <i class="nav-icon fas fa-user-circle"></i>
+                                     <i class="nav-icon fas fa-users"></i>
                                      <p>
                                          Users
                                          <i class="fas fa-angle-left right"></i>
@@ -190,7 +167,7 @@
                              </li>
                              <li class="nav-item">
                                  <a asp-controller="Administration" asp-action="Index" class="nav-link">
-                                     <i class="nav-icon fas fa-user"></i>
+                                     <i class="nav-icon fas fa-user-circle"></i>
                                      <p>
                                          Roles
                                      </p>
@@ -206,11 +183,9 @@
 
          @RenderBody()
          <footer class="main-footer">
-             <div class="float-right d-none d-sm-block">
-                 <b>Version</b> 3.0.2-pre
+             <div class="container text-center">
+                 <strong>Netherlands - Timessheets - Mind the Code</strong>
              </div>
-             <strong>Copyright &copy; 2014-2019 <a href="http://adminlte.io">AdminLTE.io</a>.</strong> All rights
-             reserved.
          </footer>
 
          <!-- Control Sidebar -->

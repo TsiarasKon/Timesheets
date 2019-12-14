@@ -7,7 +7,8 @@
         <section class="content-header">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-12 form-group">
+                    <div class="col-12">
+                        <h1>Charts</h1>
                     </div>
                 </div>
             </div>
@@ -16,11 +17,11 @@
         <section class="content-header">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-6 offset-3">
+                    <div class="col-6">
                         <!-- Pie CHART -->
-                        <div class="card card-success">
+                        <div class="card card-danger">
                             <div class="card-header">
-                                <h3 class="card-title">Pie Chart</h3>
+                                <h3 class="card-title">Hour Per TimeSheet</h3>
                                 <div class="card-tools">
                                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                         <i class="fas fa-minus"></i>
@@ -31,6 +32,27 @@
                             <div class="card-body">
                                 <div class="chart">
                                     <canvas id="PieChart" width="300" height="200"></canvas>
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                    <div class="col-6">
+                        <!-- Bar CHART -->
+                        <div class="card card-success">
+                            <div class="card-header">
+                                <h3 class="card-title">Hour Per Project</h3>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart">
+                                    <canvas id="BarChart" width="300" height="200"></canvas>
                                 </div>
                             </div>
                             <!-- /.card-body -->
@@ -70,6 +92,62 @@
                     labels: labels,
                     datasets: [{
                         label: 'Hour Per TimeSheet', data: data,
+                        backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                        ],
+                        borderColor: [
+                        'rgba(255,99,132,1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {   beginAtZero: true  }
+                    }]
+                    }
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            $.ajax({
+                type: "GET",
+                contentType: "application/json",
+                url: '@Url.Action("GetProjectsPerTime", "Charts")',
+            }).done(function (result) {
+                var labelsArray = [];
+                var dataArray = [];
+                $.each(result, function (index, data) {
+                    labelsArray.push(data.projectName);
+                    dataArray.push(data.projectCost);
+                });
+                renderChartBar(labelsArray, dataArray);
+            })
+
+        });
+
+
+        function renderChartBar(labels, data) {
+            var ctx = document.getElementById("BarChart");
+            var chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Hour Per Project',
+                        data: data,
                         backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',
                         'rgba(54, 162, 235, 0.2)',
