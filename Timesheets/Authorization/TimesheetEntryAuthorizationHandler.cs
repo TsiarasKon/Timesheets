@@ -28,8 +28,10 @@ namespace Timesheets.Authorization
                 return Task.CompletedTask;
             }
 
-            // TODO: check if admin/manager
-            if (_userManager.GetUserId(context.User) == resource.User.Id)
+            var currUserId = _userManager.GetUserId(context.User);
+            if (currUserId == resource.User.Id 
+                || context.User.IsInRole("Administrator") 
+                || (context.User.IsInRole("Manager") && resource.User.ManagerId == currUserId))
             {
                 context.Succeed(requirement);
             }

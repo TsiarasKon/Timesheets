@@ -6,18 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Data\Migrations\20191201221610_M1.cs" />
-    <Compile Remove="Data\Migrations\20191201221610_M1.Designer.cs" />
-    <Compile Remove="Data\Migrations\20191201221854_M2.cs" />
-    <Compile Remove="Data\Migrations\20191201221854_M2.Designer.cs" />
-    <Compile Remove="Data\Migrations\20191201223524_M2.cs" />
-    <Compile Remove="Data\Migrations\20191201223524_M2.Designer.cs" />
-    <Compile Remove="Data\Migrations\20191201231530_M3.cs" />
-    <Compile Remove="Data\Migrations\20191201231530_M3.Designer.cs" />
-    <Compile Remove="Data\Migrations\20191201231607_M3.cs" />
-    <Compile Remove="Data\Migrations\20191201231607_M3.Designer.cs" />
-    <Compile Remove="Data\Migrations\20191202151940_M4.cs" />
-    <Compile Remove="Data\Migrations\20191202151940_M4.Designer.cs" />
+    <Compile Remove="Data\Migrations\**" />
+    <Content Remove="Data\Migrations\**" />
+    <EmbeddedResource Remove="Data\Migrations\**" />
+    <None Remove="Data\Migrations\**" />
   </ItemGroup>
 
 
@@ -33,11 +25,6 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.0.0" />
-  </ItemGroup>
-
-
-  <ItemGroup>
-    <Folder Include="Data\Migrations\" />
   </ItemGroup>
 
 

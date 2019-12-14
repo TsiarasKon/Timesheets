@@ -22,7 +22,8 @@ namespace Timesheets.Areas.Identity
                 services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
                     .AddEntityFrameworkStores<ApplicationDbContext>()
                     .AddDefaultTokenProviders()
-                    .AddDefaultUI();
+                    .AddDefaultUI()
+                    .AddRoleManager<RoleManager<IdentityRole>>();
             });
         }
     }

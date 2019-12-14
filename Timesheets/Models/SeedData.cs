@@ -15,6 +15,19 @@ namespace Timesheets.Models
         // check: https://docs.microsoft.com/en-us/aspnet/core/tutorials/first-mvc-app/working-with-sql?view=aspnetcore-3.0&tabs=visual-studio
         // and: http://www.binaryintellect.net/articles/5e180dfa-4438-45d8-ac78-c7cc11735791.aspx
 
+        public static void SeedRoles(RoleManager<IdentityRole> roleManager)
+        {
+            string[] roleNames = { "Administrator", "Manager", "Employee" };
+            foreach (var roleName in roleNames)
+            {
+                var roleExist = roleManager.RoleExistsAsync(roleName);
+                if (!roleExist.Result)
+                {
+                    roleManager.CreateAsync(new IdentityRole(roleName)).Wait();
+                }
+            }
+        }
+
         public static void SeedUsers(UserManager<ApplicationUser> userManager)
         {
             var username1 = "a@a.a";
@@ -30,10 +43,10 @@ namespace Timesheets.Models
                 };
 
                 IdentityResult result = userManager.CreateAsync(user, "12345^qW").Result;
-                //if (result.Succeeded)
-                //{
-                //    userManager.AddToRoleAsync(user, "NormalUser").Wait();
-                //}
+                if (result.Succeeded)
+                {
+                    userManager.AddToRoleAsync(user, "Employee").Wait();
+                }
             }
             var username2 = "b@b.b";
             if (userManager.FindByNameAsync(username2).Result == null)
@@ -49,10 +62,10 @@ namespace Timesheets.Models
                 };
 
                 IdentityResult result = userManager.CreateAsync(user, "12345^qW").Result;
-                //if (result.Succeeded)
-                //{
-                //    userManager.AddToRoleAsync(user, "NormalUser").Wait();
-                //}
+                if (result.Succeeded)
+                {
+                    userManager.AddToRoleAsync(user, "Employee").Wait();
+                }
             }
             var username3 = "c@c.c";
             if (userManager.FindByNameAsync(username3).Result == null)
@@ -68,10 +81,10 @@ namespace Timesheets.Models
                 };
 
                 IdentityResult result = userManager.CreateAsync(user, "12345^qW").Result;
-                //if (result.Succeeded)
-                //{
-                //    userManager.AddToRoleAsync(user, "NormalUser").Wait();
-                //}
+                if (result.Succeeded)
+                {
+                    userManager.AddToRoleAsync(user, "Manager").Wait();
+                }
             }
             var username4 = "d@d.d";
             if (userManager.FindByNameAsync(username4).Result == null)
@@ -87,10 +100,10 @@ namespace Timesheets.Models
                 };
 
                 IdentityResult result = userManager.CreateAsync(user, "12345^qW").Result;
-                //if (result.Succeeded)
-                //{
-                //    userManager.AddToRoleAsync(user, "NormalUser").Wait();
-                //}
+                if (result.Succeeded)
+                {
+                    userManager.AddToRoleAsync(user, "Administrator").Wait();
+                }
             }
         }
 
