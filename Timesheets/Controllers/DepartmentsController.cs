@@ -116,13 +116,13 @@ namespace Timesheets.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return View("../Shared/NotFound");
             }
 
             var department = await _context.Departments.FindAsync(id);
             if (department == null)
             {
-                return NotFound();
+                return View("../Shared/NotFound");
             }
             ViewBag.ApplicationUsers = new SelectList(_context.ApplicationUsers
                 .Where(u => u.HeadingDepartment == null || u.HeadingDepartment.DepartmentId == id)
