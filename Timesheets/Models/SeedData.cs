@@ -15,82 +15,134 @@ namespace Timesheets.Models
         // check: https://docs.microsoft.com/en-us/aspnet/core/tutorials/first-mvc-app/working-with-sql?view=aspnetcore-3.0&tabs=visual-studio
         // and: http://www.binaryintellect.net/articles/5e180dfa-4438-45d8-ac78-c7cc11735791.aspx
 
+        public static void SeedRoles(RoleManager<IdentityRole> roleManager)
+        {
+            string[] roleNames = { "Administrator", "Manager", "Employee" };
+            foreach (var roleName in roleNames)
+            {
+                var roleExist = roleManager.RoleExistsAsync(roleName);
+                if (!roleExist.Result)
+                {
+                    roleManager.CreateAsync(new IdentityRole(roleName)).Wait();
+                }
+            }
+        }
+
         public static void SeedUsers(UserManager<ApplicationUser> userManager)
         {
-            var username1 = "a@a.a";
+            var username1 = "petroula@test.nl";
             if (userManager.FindByNameAsync(username1).Result == null)
             {
-                ApplicationUser user = new ApplicationUser(){
+                ApplicationUser user = new ApplicationUser()
+                {
                     UserName = username1,
                     Email = username1,
-                    FirstName = "That",
-                    LastName = "Guy",
+                    FirstName = "Petroula",
+                    LastName = "Stamouli",
                     ManHourCost = 3.14,
                     EmailConfirmed = true
                 };
 
                 IdentityResult result = userManager.CreateAsync(user, "12345^qW").Result;
-                //if (result.Succeeded)
-                //{
-                //    userManager.AddToRoleAsync(user, "NormalUser").Wait();
-                //}
+                if (result.Succeeded)
+                {
+                    userManager.AddToRoleAsync(user, "Employee").Wait();
+                }
             }
-            var username2 = "b@b.b";
+            var username2 = "sofia@test.nl";
             if (userManager.FindByNameAsync(username2).Result == null)
             {
                 ApplicationUser user = new ApplicationUser()
                 {
                     UserName = username2,
                     Email = username2,
-                    FirstName = "Other",
-                    LastName = "Guy",
+                    FirstName = "Sofia",
+                    LastName = "Tseranidou",
                     ManHourCost = 5,
                     EmailConfirmed = true
                 };
 
                 IdentityResult result = userManager.CreateAsync(user, "12345^qW").Result;
-                //if (result.Succeeded)
-                //{
-                //    userManager.AddToRoleAsync(user, "NormalUser").Wait();
-                //}
+                if (result.Succeeded)
+                {
+                    userManager.AddToRoleAsync(user, "Employee").Wait();
+                }
             }
-            var username3 = "c@c.c";
+            var username3 = "nikos@test.nl";
             if (userManager.FindByNameAsync(username3).Result == null)
             {
                 ApplicationUser user = new ApplicationUser()
                 {
                     UserName = username3,
                     Email = username3,
-                    FirstName = "C",
-                    LastName = "CC",
+                    FirstName = "Nikos",
+                    LastName = "Stavrou",
                     ManHourCost = 4,
                     EmailConfirmed = true
                 };
 
                 IdentityResult result = userManager.CreateAsync(user, "12345^qW").Result;
-                //if (result.Succeeded)
-                //{
-                //    userManager.AddToRoleAsync(user, "NormalUser").Wait();
-                //}
+                if (result.Succeeded)
+                {
+                    userManager.AddToRoleAsync(user, "Employee").Wait();
+                }
             }
-            var username4 = "d@d.d";
+            var username4 = "mpampis@test.nl";
             if (userManager.FindByNameAsync(username4).Result == null)
             {
                 ApplicationUser user = new ApplicationUser()
                 {
                     UserName = username4,
                     Email = username4,
-                    FirstName = "D",
-                    LastName = "DC",
+                    FirstName = "Mpampis",
+                    LastName = "Sougias",
+                    ManHourCost = 4.56,
+                    EmailConfirmed = true
+                };
+
+                IdentityResult result = userManager.CreateAsync(user, "12345^qW").Result;
+                if (result.Succeeded)
+                {
+                    userManager.AddToRoleAsync(user, "Manager").Wait();
+                }
+            }
+            var username5 = "antonis@test.nl";
+            if (userManager.FindByNameAsync(username5).Result == null)
+            {
+                ApplicationUser user = new ApplicationUser()
+                {
+                    UserName = username5,
+                    Email = username5,
+                    FirstName = "Antonis",
+                    LastName = "Fragkiadakis",
                     ManHourCost = 2,
                     EmailConfirmed = true
                 };
 
                 IdentityResult result = userManager.CreateAsync(user, "12345^qW").Result;
-                //if (result.Succeeded)
-                //{
-                //    userManager.AddToRoleAsync(user, "NormalUser").Wait();
-                //}
+                if (result.Succeeded)
+                {
+                    userManager.AddToRoleAsync(user, "Manager").Wait();
+                }
+            }
+            var username6 = "admin@test.nl";
+            if (userManager.FindByNameAsync(username6).Result == null)
+            {
+                ApplicationUser user = new ApplicationUser()
+                {
+                    UserName = username6,
+                    Email = username6,
+                    FirstName = "Admin",
+                    LastName = "Adminakis",
+                    ManHourCost = 9,
+                    EmailConfirmed = true
+                };
+
+                IdentityResult result = userManager.CreateAsync(user, "12345^qW").Result;
+                if (result.Succeeded)
+                {
+                    userManager.AddToRoleAsync(user, "Administrator").Wait();
+                }
             }
         }
 
@@ -107,11 +159,14 @@ namespace Timesheets.Models
 
                 var usersIdList = context.ApplicationUsers.Select(x => x.Id).Distinct().ToList();
 
-                IList<Department> newDepartments = new List<Department>() 
+                IList<Department> newDepartments = new List<Department>()
                 {
-                    new Department() { Name = "Dept1", DepartmentHeadId = usersIdList[0] },
-                    new Department() { Name = "Dept2", DepartmentHeadId = usersIdList[2] },
-                    new Department() { Name = "Dept3", DepartmentHeadId = usersIdList[1] }
+                    new Department() { Name = "Banking", DepartmentHeadId = usersIdList[0] },
+                    new Department() { Name = "Infrastructure", DepartmentHeadId = usersIdList[2] },
+                    new Department() { Name = "Networking", DepartmentHeadId = usersIdList[1] },
+                    new Department() { Name = "Telecommunications", DepartmentHeadId = usersIdList[3] },
+                    new Department() { Name = "Finance", DepartmentHeadId = usersIdList[4] }
+
                 };
                 context.Departments.AddRange(newDepartments);
                 context.SaveChanges();
@@ -120,10 +175,12 @@ namespace Timesheets.Models
 
                 IList<Project> newProjects = new List<Project>()
                 {
-                    new Project() { Name = "Proj1", OwnerDepartmentId = newDepartmentsIdList[0] },
-                    new Project() { Name = "Proj2", OwnerDepartmentId = newDepartmentsIdList[1] },
-                    new Project() { Name = "Proj3", OwnerDepartmentId = newDepartmentsIdList[0] },
-                    new Project() { Name = "Proj4", OwnerDepartmentId = newDepartmentsIdList[2] }
+                    new Project() { Name = "Android App For New Product", OwnerDepartmentId = newDepartmentsIdList[0] },
+                    new Project() { Name = "New Website", OwnerDepartmentId = newDepartmentsIdList[1] },
+                    new Project() { Name = "New database", OwnerDepartmentId = newDepartmentsIdList[0] },
+                    new Project() { Name = "Create a website for the product.", OwnerDepartmentId = newDepartmentsIdList[2] },
+                    new Project() { Name = "Integrate sql db.", OwnerDepartmentId = newDepartmentsIdList[1] }
+
                 };
                 context.Projects.AddRange(newProjects);
                 context.SaveChanges();
@@ -147,9 +204,18 @@ namespace Timesheets.Models
                 IList<TimesheetEntry> newTimesheetEntries = new List<TimesheetEntry>()
                 {
                     new TimesheetEntry() { DateCreated = DateTime.Now, HoursWorked = 7, UserId = usersIdList[0], ProjectId = newProjectsIdList[0] },
-                    new TimesheetEntry() { DateCreated = DateTime.Now, HoursWorked = 3, UserId = usersIdList[0], ProjectId = newProjectsIdList[1] }
+                    new TimesheetEntry() { DateCreated = DateTime.Now, HoursWorked = 3, UserId = usersIdList[0], ProjectId = newProjectsIdList[1] },
+                    new TimesheetEntry() { DateCreated = DateTime.Now, HoursWorked = 8, UserId = usersIdList[2], ProjectId = newProjectsIdList[3] },
+                    new TimesheetEntry() { DateCreated = DateTime.Now, HoursWorked = 10,UserId = usersIdList[1], ProjectId = newProjectsIdList[2] },
+                    new TimesheetEntry() { DateCreated = DateTime.Now, HoursWorked = 4,UserId = usersIdList[2], ProjectId = newProjectsIdList[3] },
+                    new TimesheetEntry() { DateCreated = DateTime.Now, HoursWorked = 9,UserId = usersIdList[1], ProjectId = newProjectsIdList[1] },
+                    new TimesheetEntry() { DateCreated = DateTime.Now, HoursWorked = 12,UserId = usersIdList[1], ProjectId = newProjectsIdList[2] },
+                    new TimesheetEntry() { DateCreated = DateTime.Now, HoursWorked = 13,UserId = usersIdList[0], ProjectId = newProjectsIdList[1] },
+                    new TimesheetEntry() { DateCreated = DateTime.Now, HoursWorked = 14,UserId = usersIdList[0], ProjectId = newProjectsIdList[2] },
+                    new TimesheetEntry() { DateCreated = DateTime.Now, HoursWorked = 20,UserId = usersIdList[1], ProjectId = newProjectsIdList[3] }
                 };
                 context.TimesheetEntries.AddRange(newTimesheetEntries);
+              
                 context.SaveChanges();
 
                 // TODO: insert more data; update user DepartmentIds
