@@ -30,7 +30,7 @@ namespace Timesheets.Models
 
         public static void SeedUsers(UserManager<ApplicationUser> userManager)
         {
-            var username1 = "petroula@a.a";
+            var username1 = "petroula@test.nl";
             if (userManager.FindByNameAsync(username1).Result == null)
             {
                 ApplicationUser user = new ApplicationUser()
@@ -49,7 +49,7 @@ namespace Timesheets.Models
                     userManager.AddToRoleAsync(user, "Employee").Wait();
                 }
             }
-            var username2 = "sofia@b.b";
+            var username2 = "sofia@test.nl";
             if (userManager.FindByNameAsync(username2).Result == null)
             {
                 ApplicationUser user = new ApplicationUser()
@@ -68,7 +68,7 @@ namespace Timesheets.Models
                     userManager.AddToRoleAsync(user, "Employee").Wait();
                 }
             }
-            var username3 = "nikos@c.c";
+            var username3 = "nikos@test.nl";
             if (userManager.FindByNameAsync(username3).Result == null)
             {
                 ApplicationUser user = new ApplicationUser()
@@ -84,19 +84,57 @@ namespace Timesheets.Models
                 IdentityResult result = userManager.CreateAsync(user, "12345^qW").Result;
                 if (result.Succeeded)
                 {
-                    userManager.AddToRoleAsync(user, "Manager").Wait();
+                    userManager.AddToRoleAsync(user, "Employee").Wait();
                 }
             }
-            var username4 = "antonis@d.d";
+            var username4 = "mpampis@test.nl";
             if (userManager.FindByNameAsync(username4).Result == null)
             {
                 ApplicationUser user = new ApplicationUser()
                 {
                     UserName = username4,
                     Email = username4,
+                    FirstName = "Mpampis",
+                    LastName = "Sougias",
+                    ManHourCost = 4.56,
+                    EmailConfirmed = true
+                };
+
+                IdentityResult result = userManager.CreateAsync(user, "12345^qW").Result;
+                if (result.Succeeded)
+                {
+                    userManager.AddToRoleAsync(user, "Manager").Wait();
+                }
+            }
+            var username5 = "antonis@test.nl";
+            if (userManager.FindByNameAsync(username5).Result == null)
+            {
+                ApplicationUser user = new ApplicationUser()
+                {
+                    UserName = username5,
+                    Email = username5,
                     FirstName = "Antonis",
                     LastName = "Fragkiadakis",
                     ManHourCost = 2,
+                    EmailConfirmed = true
+                };
+
+                IdentityResult result = userManager.CreateAsync(user, "12345^qW").Result;
+                if (result.Succeeded)
+                {
+                    userManager.AddToRoleAsync(user, "Manager").Wait();
+                }
+            }
+            var username6 = "admin@test.nl";
+            if (userManager.FindByNameAsync(username6).Result == null)
+            {
+                ApplicationUser user = new ApplicationUser()
+                {
+                    UserName = username6,
+                    Email = username6,
+                    FirstName = "Admin",
+                    LastName = "Adminakis",
+                    ManHourCost = 9,
                     EmailConfirmed = true
                 };
 
@@ -126,8 +164,8 @@ namespace Timesheets.Models
                     new Department() { Name = "Banking", DepartmentHeadId = usersIdList[0] },
                     new Department() { Name = "Infrastructure", DepartmentHeadId = usersIdList[2] },
                     new Department() { Name = "Networking", DepartmentHeadId = usersIdList[1] },
-                    new Department() { Name = "Telecommunications", DepartmentHeadId = usersIdList[2] },
-                    new Department() { Name = "Finance", DepartmentHeadId = usersIdList[1] }
+                    new Department() { Name = "Telecommunications", DepartmentHeadId = usersIdList[3] },
+                    new Department() { Name = "Finance", DepartmentHeadId = usersIdList[4] }
 
                 };
                 context.Departments.AddRange(newDepartments);

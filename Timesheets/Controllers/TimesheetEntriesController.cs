@@ -39,9 +39,26 @@ namespace Timesheets.Controllers
             ViewBag.UserNameSortParm = sortOrder == "userName_asc" ? "userName_desc" : "userName_asc";
             ViewBag.ProjectSortParm = sortOrder == "project_asc" ? "project_desc" : "project_asc";
 
-            IEnumerable<TimesheetEntry> timesheetList = _context.TimesheetEntries.
+            IEnumerable<TimesheetEntry> timesheetList;
+            if (User.IsInRole("Administrator"))
+            {
+                timesheetList = _context.TimesheetEntries.
                 Include(t => t.Project).Include(t => t.User);
-            timesheetList.ToList().RemoveAll(TimesheetEntryAuthorizedAsync);
+            } else if (User.IsInRole("Manager"))
+            {
+                timesheetList = _context.TimesheetEntries.
+                Include(t => t.Project).Include(t => t.User).
+                Where(t => t.User.ManagerId == User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            } else
+            {
+                timesheetList = _context.TimesheetEntries.
+                Where(t => t.UserId == User.FindFirst(ClaimTypes.NameIdentifier).Value).
+                Include(t => t.Project).Include(t => t.User);
+            }  
+
+            //IEnumerable<TimesheetEntry> timesheetList = _context.TimesheetEntries.
+            //    Include(t => t.Project).Include(t => t.User);
+            //timesheetList = timesheetList.ToList().RemoveAll(TimesheetEntryAuthorizedAsync);
             //IEnumerable<TimesheetEntry> timesheetList = Enumerable.Empty<TimesheetEntry>();
             //foreach (var entry in timesheetListUnverified)
             //{
@@ -52,6 +69,7 @@ namespace Timesheets.Controllers
             //        timesheetList.Append(entry);
             //    }
             //}
+
             if (String.IsNullOrEmpty(searchString))
             {
                 searchString = ViewBag.SearchString;
