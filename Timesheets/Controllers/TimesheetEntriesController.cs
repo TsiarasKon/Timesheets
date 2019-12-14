@@ -29,7 +29,7 @@ namespace Timesheets.Controllers
         // GET: TimesheetEntries
         public async Task<IActionResult> Index(string sortOrder, string searchString)
         {
-            if (! User.Identity.IsAuthenticated)
+            if (!User.Identity.IsAuthenticated)
             {
                 return new ChallengeResult();
             }
@@ -49,7 +49,7 @@ namespace Timesheets.Controllers
             {
                 timesheetList = _context.TimesheetEntries.
                 Include(t => t.Project).Include(t => t.User).
-                Where(t => t.UserId == User.FindFirst(ClaimTypes.NameIdentifier).Value || t.User.ManagerId == User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                Where(t => t.User.ManagerId == User.FindFirst(ClaimTypes.NameIdentifier).Value);
             }
             else
             {
@@ -166,12 +166,12 @@ namespace Timesheets.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create( TimesheetEntry timesheetEntry)
+        public async Task<IActionResult> Create(TimesheetEntry timesheetEntry)
         {
             var justCheck = _context.TimesheetEntries
                 .Where(t => t.DateCreated.Date == timesheetEntry.DateCreated.Date && t.ProjectId == timesheetEntry.ProjectId).FirstOrDefault();
 
-            if (ModelState.IsValid && justCheck == null && timesheetEntry.HoursWorked>0)
+            if (ModelState.IsValid && justCheck == null && timesheetEntry.HoursWorked > 0)
             {
                 _context.Add(timesheetEntry);
                 await _context.SaveChangesAsync();
@@ -235,7 +235,7 @@ namespace Timesheets.Controllers
             }
             var authorizationResult = await _authorizationService
                 .AuthorizeAsync(User, timesheetEntry, "SameTimesheetEntryCreator");
-            if (authorizationResult.Succeeded && timesheetEntry.HoursWorked > 0 )
+            if (authorizationResult.Succeeded && timesheetEntry.HoursWorked > 0)
             {
                 try
                 {

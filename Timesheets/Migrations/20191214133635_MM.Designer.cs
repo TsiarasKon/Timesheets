@@ -10,8 +10,8 @@ using Timesheets.Data;
 namespace Timesheets.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20191214145534_DBK")]
-    partial class DBK
+    [Migration("20191214133635_MM")]
+    partial class MM
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
