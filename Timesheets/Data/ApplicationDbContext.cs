@@ -54,6 +54,11 @@ namespace Timesheets.Data
                 .HasForeignKey(u => u.DepartmentId)
                 .OnDelete(DeleteBehavior.NoAction);
 
+            //builder.Entity<TimesheetEntry>()
+            //    .HasOne(t => t.Project)
+            //    .WithMany(p => p.TimeSheetEntries);
+
+
             builder.Entity<TimesheetEntry>()
                 .HasOne(t => t.User)
                 .WithMany(u => u.TimesheetEntries)

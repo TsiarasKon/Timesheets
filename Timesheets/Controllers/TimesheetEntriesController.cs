@@ -44,17 +44,19 @@ namespace Timesheets.Controllers
             {
                 timesheetList = _context.TimesheetEntries.
                 Include(t => t.Project).Include(t => t.User);
-            } else if (User.IsInRole("Manager"))
+            }
+            else if (User.IsInRole("Manager"))
             {
                 timesheetList = _context.TimesheetEntries.
                 Include(t => t.Project).Include(t => t.User).
                 Where(t => t.User.ManagerId == User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            } else
+            }
+            else
             {
                 timesheetList = _context.TimesheetEntries.
                 Where(t => t.UserId == User.FindFirst(ClaimTypes.NameIdentifier).Value).
                 Include(t => t.Project).Include(t => t.User);
-            }  
+            }
 
             //IEnumerable<TimesheetEntry> timesheetList = _context.TimesheetEntries.
             //    Include(t => t.Project).Include(t => t.User);
@@ -164,22 +166,12 @@ namespace Timesheets.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-<<<<<<<<< Temporary merge branch 1
-        public async Task<IActionResult> Create( TimesheetEntry timesheetEntry)
-=========
         public async Task<IActionResult> Create(TimesheetEntry timesheetEntry)
->>>>>>>>> Temporary merge branch 2
         {
             var justCheck = _context.TimesheetEntries
                 .Where(t => t.DateCreated.Date == timesheetEntry.DateCreated.Date && t.ProjectId == timesheetEntry.ProjectId).FirstOrDefault();
 
-<<<<<<<<< Temporary merge branch 1
-            if (ModelState.IsValid && justCheck == null && timesheetEntry.HoursWorked>0)
-=========
-            //var applicationDbContext = _context.TimesheetEntries.Include(t => t.Project).Include(t => t.User);
-            //    return View(await applicationDbContext.ToListAsync());
             if (ModelState.IsValid && justCheck == null && timesheetEntry.HoursWorked > 0)
->>>>>>>>> Temporary merge branch 2
             {
                 _context.Add(timesheetEntry);
                 await _context.SaveChangesAsync();
@@ -216,7 +208,7 @@ namespace Timesheets.Controllers
             {
                 ViewBag.Projects = new SelectList(_context.Projects, "ProjectId", "Name");
                 ViewBag.ApplicationUsers = new SelectList(_context.ApplicationUsers
-                   .Select(u => new { FullName = string.Format("{0} {1}", u.FirstName, u.LastName), u.Id })
+                   .Select(u => new { FullName = String.Format("{0} {1}", u.FirstName, u.LastName), u.Id })
                    , "Id", "FullName");
                 return View(timesheetEntry);
             }
@@ -243,11 +235,7 @@ namespace Timesheets.Controllers
             }
             var authorizationResult = await _authorizationService
                 .AuthorizeAsync(User, timesheetEntry, "SameTimesheetEntryCreator");
-            if (authorizationResult.Succeeded && timesheetEntry.HoursWorked > 0 )
-=========
-
-            if (timesheetEntry.HoursWorked > 0)
->>>>>>>>> Temporary merge branch 2
+            if (authorizationResult.Succeeded && timesheetEntry.HoursWorked > 0)
             {
                 try
                 {
