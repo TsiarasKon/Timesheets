@@ -148,12 +148,12 @@ namespace Timesheets.Controllers
             var project = await _context.Projects
                 .Include(p => p.OwnerDepartment)
                 .Include(p => p.TimesheetEntries)
-                .FirstOrDefaultAsync(m => m.ProjectId == id);
+                .SingleOrDefaultAsync(m => m.ProjectId == id);
             if (project == null)
             {
                 return NotFound();
             }
-            if(project.TimesheetEntries != null)
+            if(project.TimesheetEntries.Count != 0)
             {
                 //ViewBag.Message = string.Format("That project that you going to remove contains timesheet");
                 return View("NoDelete");
