@@ -20,7 +20,7 @@ namespace Timesheets.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return RedirectToAction("Index", "TimesheetEntries");
         }
 
         public IActionResult Privacy()
