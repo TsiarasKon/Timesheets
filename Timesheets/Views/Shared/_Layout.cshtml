@@ -79,7 +79,13 @@
                  <nav class="mt-2">
                      <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                          <!-- Add icons to the links using the .nav-icon class
-                         with font-awesome or any other icon font library -->
+    with font-awesome or any other icon font library -->
+                         <li class="nav-item">
+                             <a asp-area="Identity" asp-page="/Account/Manage/Index" class="nav-link">
+                                 <i class="far fa-user-alt nav-icon font-weight-bold"></i>
+                                 <p>Profile</p>
+                             </a>
+                         </li>
                          <li class="nav-item has-treeview">
                              <a href="#" class="nav-link">
                                  <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -138,66 +144,98 @@
                                  </li>
                              </ul>
                          </li>
-                         <li class="nav-header">Other Links</li>
+                         <li class="nav-header">Links</li>
                          <li class="nav-item has-treeview">
                              <a href="#" class="nav-link">
-                                 <i class="nav-icon fas fa-book"></i>
+                                 <i class="nav-icon fas fa-calendar-alt"></i>
                                  <p>
-                                     Pages
+                                     Timesheet Entries
                                      <i class="fas fa-angle-left right"></i>
                                  </p>
                              </a>
                              <ul class="nav nav-treeview">
                                  <li class="nav-item">
-                                     <a href="../examples/profile.html" class="nav-link">
+                                     <a asp-controller="TimesheetEntries" asp-action="Index" class="nav-link">
                                          <i class="far fa-circle nav-icon"></i>
-                                         <p>Profile</p>
+                                         <p>Entries Index</p>
                                      </a>
                                  </li>
                                  <li class="nav-item">
-                                     <a href="../examples/projects.html" class="nav-link">
+                                     <a asp-controller="TimesheetEntries" asp-action="Create" class="nav-link">
                                          <i class="far fa-circle nav-icon"></i>
-                                         <p>Projects</p>
+                                         <p>Entry Add</p>
+                                     </a>
+                                 </li>
+                             </ul>
+                         </li>
+                         <li class="nav-item has-treeview">
+                             <a href="#" class="nav-link">
+                                 <i class="nav-icon fas fa-book"></i>
+                                 <p>
+                                     Projects
+                                     <i class="fas fa-angle-left right"></i>
+                                 </p>
+                             </a>
+                             <ul class="nav nav-treeview">
+                                 <li class="nav-item">
+                                     <a asp-controller="Projects" asp-action="Index" class="nav-link">
+                                         <i class="far fa-circle nav-icon"></i>
+                                         <p>Project Index</p>
                                      </a>
                                  </li>
                                  <li class="nav-item">
-                                     <a href="../examples/project_add.html" class="nav-link">
+                                     <a asp-controller="Projects" asp-action="Create" class="nav-link">
                                          <i class="far fa-circle nav-icon"></i>
                                          <p>Project Add</p>
                                      </a>
                                  </li>
+                             </ul>
+                         </li>
+                         <li class="nav-item has-treeview">
+                             <a href="#" class="nav-link">
+                                 <i class="nav-icon fas fa-building"></i>
+                                 <p>
+                                     Departments
+                                     <i class="fas fa-angle-left right"></i>
+                                 </p>
+                             </a>
+                             <ul class="nav nav-treeview">
                                  <li class="nav-item">
-                                     <a href="../examples/project_edit.html" class="nav-link">
+                                     <a asp-controller="Departments" asp-action="Index" class="nav-link">
                                          <i class="far fa-circle nav-icon"></i>
-                                         <p>Project Edit</p>
+                                         <p>Department Index</p>
                                      </a>
                                  </li>
                                  <li class="nav-item">
-                                     <a href="../examples/project_detail.html" class="nav-link">
+                                     <a asp-controller="Departments" asp-action="Create" class="nav-link">
                                          <i class="far fa-circle nav-icon"></i>
-                                         <p>Project Detail</p>
+                                         <p>Department Add</p>
                                      </a>
                                  </li>
                              </ul>
-                         </li>                
-                         <li class="nav-header">LABELS</li>
-                         <li class="nav-item">
-                             <a href="#" class="nav-link">
-                                 <i class="nav-icon far fa-circle text-danger"></i>
-                                 <p class="text">Important</p>
-                             </a>
                          </li>
-                         <li class="nav-item">
+                         <li class="nav-item has-treeview">
                              <a href="#" class="nav-link">
-                                 <i class="nav-icon far fa-circle text-warning"></i>
-                                 <p>Warning</p>
+                                 <i class="nav-icon fas fa-user"></i>
+                                 <p>
+                                     Users
+                                     <i class="fas fa-angle-left right"></i>
+                                 </p>
                              </a>
-                         </li>
-                         <li class="nav-item">
-                             <a href="#" class="nav-link">
-                                 <i class="nav-icon far fa-circle text-info"></i>
-                                 <p>Informational</p>
-                             </a>
+                             <ul class="nav nav-treeview">
+                                 <li class="nav-item">
+                                     <a asp-controller="Users" asp-action="Index" class="nav-link">
+                                         <i class="far fa-circle nav-icon"></i>
+                                         <p>User Index</p>
+                                     </a>
+                                 </li>
+                                 <li class="nav-item">
+                                     <a asp-area="Identity" asp-page="/Account/Register" class="nav-link">
+                                         <i class="far fa-circle nav-icon"></i>
+                                         <p>User Add</p>
+                                     </a>
+                                 </li>
+                             </ul>
                          </li>
                      </ul>
                  </nav>
