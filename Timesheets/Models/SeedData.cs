@@ -15,6 +15,9 @@ namespace Timesheets.Models
         // check: https://docs.microsoft.com/en-us/aspnet/core/tutorials/first-mvc-app/working-with-sql?view=aspnetcore-3.0&tabs=visual-studio
         // and: http://www.binaryintellect.net/articles/5e180dfa-4438-45d8-ac78-c7cc11735791.aspx
 
+        public static string[] usernames = { 
+            "petroula@test.nl", "sofia@test.nl", "nikos@test.nl", "mpampis@test.nl", "antonis@test.nl", "admin@test.nl" };
+
         public static void SeedRoles(RoleManager<IdentityRole> roleManager)
         {
             string[] roleNames = { "Administrator", "Manager", "Employee" };
@@ -30,13 +33,12 @@ namespace Timesheets.Models
 
         public static void SeedUsers(UserManager<ApplicationUser> userManager)
         {
-            var username1 = "petroula@test.nl";
-            if (userManager.FindByNameAsync(username1).Result == null)
+            if (userManager.FindByNameAsync(usernames[0]).Result == null)
             {
                 ApplicationUser user = new ApplicationUser()
                 {
-                    UserName = username1,
-                    Email = username1,
+                    UserName = usernames[0],
+                    Email = usernames[0],
                     FirstName = "Petroula",
                     LastName = "Stamouli",
                     ManHourCost = 3.14,
@@ -49,13 +51,13 @@ namespace Timesheets.Models
                     userManager.AddToRoleAsync(user, "Employee").Wait();
                 }
             }
-            var username2 = "sofia@test.nl";
-            if (userManager.FindByNameAsync(username2).Result == null)
+
+            if (userManager.FindByNameAsync(usernames[1]).Result == null)
             {
                 ApplicationUser user = new ApplicationUser()
                 {
-                    UserName = username2,
-                    Email = username2,
+                    UserName = usernames[1],
+                    Email = usernames[1],
                     FirstName = "Sofia",
                     LastName = "Tseranidou",
                     ManHourCost = 5,
@@ -68,13 +70,13 @@ namespace Timesheets.Models
                     userManager.AddToRoleAsync(user, "Employee").Wait();
                 }
             }
-            var username3 = "nikos@test.nl";
-            if (userManager.FindByNameAsync(username3).Result == null)
+
+            if (userManager.FindByNameAsync(usernames[2]).Result == null)
             {
                 ApplicationUser user = new ApplicationUser()
                 {
-                    UserName = username3,
-                    Email = username3,
+                    UserName = usernames[2],
+                    Email = usernames[2],
                     FirstName = "Nikos",
                     LastName = "Stavrou",
                     ManHourCost = 4,
@@ -87,13 +89,13 @@ namespace Timesheets.Models
                     userManager.AddToRoleAsync(user, "Employee").Wait();
                 }
             }
-            var username4 = "mpampis@test.nl";
-            if (userManager.FindByNameAsync(username4).Result == null)
+
+            if (userManager.FindByNameAsync(usernames[3]).Result == null)
             {
                 ApplicationUser user = new ApplicationUser()
                 {
-                    UserName = username4,
-                    Email = username4,
+                    UserName = usernames[3],
+                    Email = usernames[3],
                     FirstName = "Mpampis",
                     LastName = "Sougias",
                     ManHourCost = 4.56,
@@ -106,13 +108,13 @@ namespace Timesheets.Models
                     userManager.AddToRoleAsync(user, "Manager").Wait();
                 }
             }
-            var username5 = "antonis@test.nl";
-            if (userManager.FindByNameAsync(username5).Result == null)
+
+            if (userManager.FindByNameAsync(usernames[4]).Result == null)
             {
                 ApplicationUser user = new ApplicationUser()
                 {
-                    UserName = username5,
-                    Email = username5,
+                    UserName = usernames[4],
+                    Email = usernames[4],
                     FirstName = "Antonis",
                     LastName = "Fragkiadakis",
                     ManHourCost = 2,
@@ -125,13 +127,13 @@ namespace Timesheets.Models
                     userManager.AddToRoleAsync(user, "Manager").Wait();
                 }
             }
-            var username6 = "admin@test.nl";
-            if (userManager.FindByNameAsync(username6).Result == null)
+
+            if (userManager.FindByNameAsync(usernames[5]).Result == null)
             {
                 ApplicationUser user = new ApplicationUser()
                 {
-                    UserName = username6,
-                    Email = username6,
+                    UserName = usernames[5],
+                    Email = usernames[5],
                     FirstName = "Admin",
                     LastName = "Adminakis",
                     ManHourCost = 9,
@@ -218,7 +220,22 @@ namespace Timesheets.Models
               
                 context.SaveChanges();
 
-                // TODO: insert more data; update user DepartmentIds
+                var users = context.ApplicationUsers.ToList();
+                users[0].DepartmentId = newDepartmentsIdList[0];
+                users[0].ManagerId = usersIdList[3];
+                users[1].DepartmentId = newDepartmentsIdList[0];
+                users[1].ManagerId = usersIdList[3];
+                users[2].DepartmentId = newDepartmentsIdList[2];
+                users[2].ManagerId = usersIdList[4];
+                users[3].DepartmentId = newDepartmentsIdList[3];
+                users[3].ManagerId = usersIdList[3];
+                users[4].DepartmentId = newDepartmentsIdList[3];
+                users[4].ManagerId = usersIdList[4];
+                users[5].DepartmentId = newDepartmentsIdList[3];
+                users[5].ManagerId = usersIdList[5];
+                context.UpdateRange(users);
+                context.SaveChanges();
+
             }
         }
     }

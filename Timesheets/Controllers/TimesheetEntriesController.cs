@@ -44,17 +44,19 @@ namespace Timesheets.Controllers
             {
                 timesheetList = _context.TimesheetEntries.
                 Include(t => t.Project).Include(t => t.User);
-            } else if (User.IsInRole("Manager"))
+            }
+            else if (User.IsInRole("Manager"))
             {
                 timesheetList = _context.TimesheetEntries.
                 Include(t => t.Project).Include(t => t.User).
-                Where(t => t.User.ManagerId == User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            } else
+                Where(t => t.UserId == User.FindFirst(ClaimTypes.NameIdentifier).Value || t.User.ManagerId == User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            }
+            else
             {
                 timesheetList = _context.TimesheetEntries.
                 Where(t => t.UserId == User.FindFirst(ClaimTypes.NameIdentifier).Value).
                 Include(t => t.Project).Include(t => t.User);
-            }  
+            }
 
             //IEnumerable<TimesheetEntry> timesheetList = _context.TimesheetEntries.
             //    Include(t => t.Project).Include(t => t.User);

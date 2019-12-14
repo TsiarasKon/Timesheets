@@ -22,6 +22,13 @@ namespace Timesheets.Controllers
             _userManager = userManager;
         }
 
+        [HttpGet]
+        public IActionResult Index()
+        {
+            var roles = _roleManager.Roles;
+            return View(roles);
+        }
+
         [HttpGet(Name = nameof(CreateRole))]
         public IActionResult CreateRole()
         {
@@ -45,12 +52,7 @@ namespace Timesheets.Controllers
             }
             return View(model);
         }
-        [HttpGet]
-        public IActionResult ListRoles()
-        {
-            var roles = _roleManager.Roles;
-            return View(roles);
-        }
+
         [HttpGet]
         public async Task<IActionResult> EditRole(string id)
         {

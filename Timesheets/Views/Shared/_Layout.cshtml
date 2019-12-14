@@ -144,30 +144,35 @@
                                  </li>
                              </ul>
                          </li>
-                         <li class="nav-header">Links</li>
-                         <li class="nav-item has-treeview">
-                             <a href="#" class="nav-link">
-                                 <i class="nav-icon fas fa-calendar-alt"></i>
-                                 <p>
-                                     Timesheet Entries
-                                     <i class="fas fa-angle-left right"></i>
-                                 </p>
-                             </a>
-                             <ul class="nav nav-treeview">
-                                 <li class="nav-item">
-                                     <a asp-controller="TimesheetEntries" asp-action="Index" class="nav-link">
-                                         <i class="far fa-circle nav-icon"></i>
-                                         <p>Entries Index</p>
-                                     </a>
-                                 </li>
-                                 <li class="nav-item">
-                                     <a asp-controller="TimesheetEntries" asp-action="Create" class="nav-link">
-                                         <i class="far fa-circle nav-icon"></i>
-                                         <p>Entry Add</p>
-                                     </a>
-                                 </li>
-                             </ul>
-                         </li>
+                         @if (User.Identity.IsAuthenticated)
+                         {
+                             <li class="nav-header">Links</li>
+                             <li class="nav-item has-treeview">
+                                 <a href="#" class="nav-link">
+                                     <i class="nav-icon fas fa-calendar-alt"></i>
+                                     <p>
+                                         Timesheet Entries
+                                         <i class="fas fa-angle-left right"></i>
+                                     </p>
+                                 </a>
+                                 <ul class="nav nav-treeview">
+                                     <li class="nav-item">
+                                         <a asp-controller="TimesheetEntries" asp-action="Index" class="nav-link">
+                                             <i class="far fa-circle nav-icon"></i>
+                                             <p>Entries Index</p>
+                                         </a>
+                                     </li>
+                                     <li class="nav-item">
+                                         <a asp-controller="TimesheetEntries" asp-action="Create" class="nav-link">
+                                             <i class="far fa-circle nav-icon"></i>
+                                             <p>Entry Add</p>
+                                         </a>
+                                     </li>
+                                 </ul>
+                             </li>
+                         }
+                         @if (User.IsInRole("Administrator"))
+                         {
                          <li class="nav-item has-treeview">
                              <a href="#" class="nav-link">
                                  <i class="nav-icon fas fa-book"></i>
@@ -237,6 +242,7 @@
                                  </li>
                              </ul>
                          </li>
+                         }
                      </ul>
                  </nav>
                  <!-- /.sidebar-menu -->
