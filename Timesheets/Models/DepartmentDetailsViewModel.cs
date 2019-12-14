@@ -13,5 +13,6 @@ namespace Timesheets.Models
         public ApplicationUser DepartmentHead { get; set; }
         public IEnumerable<Project> OwnedProjects { get; set; }
         public IEnumerable<Project> RelatedProjects { get; set; }
+
     }
 }
