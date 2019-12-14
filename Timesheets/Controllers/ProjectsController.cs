@@ -20,14 +20,40 @@ namespace Timesheets.Controllers
         }
 
         // GET: Projects
-        public IActionResult Index()
+        public IActionResult Index(string sortOrder, string searchString)
         {
-            ProjectViewModel model = new ProjectViewModel
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewBag.OwnerDepartmentSortParm = sortOrder == "deptOwner_asc" ? "deptOwner_desc" : "deptOwner_asc";
+
+            IEnumerable<Project> projectList = _context.Projects.Include(p => p.OwnerDepartment);
+            if (String.IsNullOrEmpty(searchString))
             {
-                Projects = _context.Projects.ToList(),
-                Departments = _context.Departments.ToList()
-            };
-            return View(model);
+                searchString = ViewBag.SearchString;
+            } else
+            {
+                ViewBag.SearchString = searchString;
+            }
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                projectList = projectList.Where(p => p.Name.Contains(searchString, StringComparison.CurrentCultureIgnoreCase)
+                                       || p.OwnerDepartment.Name.Contains(searchString, StringComparison.CurrentCultureIgnoreCase));
+            }
+            switch (sortOrder)
+            {
+                case "deptOwner_asc":
+                    projectList = projectList.OrderBy(p => p.OwnerDepartment.Name);
+                    break;
+                case "deptOwner_desc":
+                    projectList = projectList.OrderByDescending(p => p.OwnerDepartment.Name);
+                    break;
+                case "name_desc":
+                    projectList = projectList.OrderByDescending(p => p.Name);
+                    break;
+                default:
+                    projectList = projectList.OrderBy(p => p.Name);
+                    break;
+            }
+            return View(projectList.ToList());
         }
 
         // GET: Projects/Details/5
@@ -78,7 +104,9 @@ namespace Timesheets.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["OwnerDepartmentId"] = new SelectList(_context.Departments, "DepartmentId", "DepartmentId", project.OwnerDepartmentId);
+            ViewBag.Departments = new SelectList(_context.Departments
+                .Select(d => new { d.Name, d.DepartmentId })
+                , "DepartmentId", "Name"); 
             return View(project);
         }
 
@@ -133,7 +161,9 @@ namespace Timesheets.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["OwnerDepartmentId"] = new SelectList(_context.Departments, "DepartmentId", "DepartmentId", project.OwnerDepartmentId);
+            ViewBag.Departments = new SelectList(_context.Departments
+                .Select(d => new { d.Name, d.DepartmentId })
+                , "DepartmentId", "Name"); 
             return View(project);
         }
 

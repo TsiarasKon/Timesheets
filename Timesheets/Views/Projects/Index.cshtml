@@ -1,4 +1,4 @@
-﻿@model ProjectViewModel
+﻿@model IEnumerable<Project>
 
 @{
     ViewData["Title"] = "Index";
@@ -25,22 +25,28 @@
                     <div class="card-header">
                         <h3 class="card-title">Projects</h3>
                     </div>
+                    <form asp-action="Index" method="get">
+                        <p>
+                            Filter Projects: <input type="text" name="searchString" value="@ViewBag.SearchString">
+                            <input type="submit" value="Filter" />
+                        </p>
+                    </form>
                     <!-- /.card-header -->
                     <div class="card-body p-0">
                         <table class="table table-striped">
                             <thead>
                                 <tr>
                                     <th>
-                                        Name
+                                        @Html.DisplayNameFor(model => model.Name) @Html.ActionLink("", "Index", new { sortOrder = ViewBag.NameSortParm, searchString = ViewBag.SearchString }, new { @class = "fas fa-sort" })
                                     </th>
                                     <th>
-                                        Owner Department
+                                        @Html.DisplayNameFor(model => model.OwnerDepartment) @Html.ActionLink("", "Index", new { sortOrder = ViewBag.OwnerDepartmentSortParm, searchString = ViewBag.SearchString }, new { @class = "fas fa-sort" })
                                     </th>
                                     <th></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var item in Model.Projects)
+                                @foreach (var item in Model)
                                 {
                                     <tr>
                                         <td>
