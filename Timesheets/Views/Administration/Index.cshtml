@@ -28,11 +28,6 @@
                 <div class="row">
                     @if (Model.Any())
                     {
-                        <div class="col-12">
-                            <a class="btn btn-primary mb-3"
-                                   asp-action="CreateRole"
-                                   asp-controller="Administration">Add new role</a>
-                        </div>
                         foreach (var role in Model)
                         {
                             <!-- left column -->
@@ -45,13 +40,6 @@
                                     <!-- /.card-header -->
                                     <div class="card-body">
                                         <h3 class="card-title">@role.Name</h3>
-                                    </div>
-                                    <div class="card-footer">
-                                        <a class="btn btn-primary" asp-action="EditRole"
-                                           asp-controller="Administration" asp-route-id="@role.Id">Edit</a>
-                                        <a class="btn btn-primary" asp-action="EditUsersInRole"
-                                           asp-controller="Administration" asp-route-id="@role.Id">Edit2</a>
-                                        <a href="#" class="btn btn-danger">Delete</a>
                                     </div>
                                 </div>
                                 <!-- /.card -->

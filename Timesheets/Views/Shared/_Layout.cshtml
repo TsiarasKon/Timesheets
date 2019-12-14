@@ -51,42 +51,45 @@
                  <nav class="mt-2">
                      <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                          <!-- Add icons to the links using the .nav-icon class
-                          with font-awesome or any other icon font library -->
+     with font-awesome or any other icon font library -->
                          <li class="nav-item">
                              <a asp-area="Identity" asp-page="/Account/Manage/Index" class="nav-link">
                                  <i class="far fa-user-alt nav-icon font-weight-bold"></i>
                                  <p>Profile</p>
                              </a>
                          </li>
-                         <li class="nav-item has-treeview">
-                             <a href="#" class="nav-link">
-                                 <i class="nav-icon fas fa-chart-pie"></i>
-                                 <p>
-                                     Charts
-                                     <i class="right fas fa-angle-left"></i>
-                                 </p>
-                             </a>
-                             <ul class="nav nav-treeview">
-                                 <li class="nav-item">
-                                     <a asp-controller="Charts" asp-action="Index" class="nav-link">
-                                         <i class="far fa-circle nav-icon"></i>
-                                         <p>Pie Chart</p>
-                                     </a>
-                                 </li>
-                                 <li class="nav-item">
-                                     <a href="../charts/flot.html" class="nav-link">
-                                         <i class="far fa-circle nav-icon"></i>
-                                         <p>Bar Chart</p>
-                                     </a>
-                                 </li>
-                                 <li class="nav-item">
-                                     <a href="../charts/inline.html" class="nav-link">
-                                         <i class="far fa-circle nav-icon"></i>
-                                         <p>Line Chart</p>
-                                     </a>
-                                 </li>
-                             </ul>
-                         </li>
+                         @if (User.IsInRole("Administrator") || User.IsInRole("Manager"))
+                         {
+                             <li class="nav-item has-treeview">
+                                 <a href="#" class="nav-link">
+                                     <i class="nav-icon fas fa-chart-pie"></i>
+                                     <p>
+                                         Charts
+                                         <i class="right fas fa-angle-left"></i>
+                                     </p>
+                                 </a>
+                                 <ul class="nav nav-treeview">
+                                     <li class="nav-item">
+                                         <a asp-controller="Charts" asp-action="Index" class="nav-link">
+                                             <i class="far fa-circle nav-icon"></i>
+                                             <p>Pie Chart</p>
+                                         </a>
+                                     </li>
+                                     <li class="nav-item">
+                                         <a href="../charts/flot.html" class="nav-link">
+                                             <i class="far fa-circle nav-icon"></i>
+                                             <p>Bar Chart</p>
+                                         </a>
+                                     </li>
+                                     <li class="nav-item">
+                                         <a href="../charts/inline.html" class="nav-link">
+                                             <i class="far fa-circle nav-icon"></i>
+                                             <p>Line Chart</p>
+                                         </a>
+                                     </li>
+                                 </ul>
+                             </li>
+                         }
                          @if (User.Identity.IsAuthenticated)
                          {
                              <li class="nav-header">Links</li>
@@ -116,75 +119,83 @@
                          }
                          @if (User.IsInRole("Administrator"))
                          {
-                         <li class="nav-item has-treeview">
-                             <a href="#" class="nav-link">
-                                 <i class="nav-icon fas fa-book"></i>
-                                 <p>
-                                     Projects
-                                     <i class="fas fa-angle-left right"></i>
-                                 </p>
-                             </a>
-                             <ul class="nav nav-treeview">
-                                 <li class="nav-item">
-                                     <a asp-controller="Projects" asp-action="Index" class="nav-link">
-                                         <i class="far fa-circle nav-icon"></i>
-                                         <p>Project Index</p>
-                                     </a>
-                                 </li>
-                                 <li class="nav-item">
-                                     <a asp-controller="Projects" asp-action="Create" class="nav-link">
-                                         <i class="far fa-circle nav-icon"></i>
-                                         <p>Project Add</p>
-                                     </a>
-                                 </li>
-                             </ul>
-                         </li>
-                         <li class="nav-item has-treeview">
-                             <a href="#" class="nav-link">
-                                 <i class="nav-icon fas fa-building"></i>
-                                 <p>
-                                     Departments
-                                     <i class="fas fa-angle-left right"></i>
-                                 </p>
-                             </a>
-                             <ul class="nav nav-treeview">
-                                 <li class="nav-item">
-                                     <a asp-controller="Departments" asp-action="Index" class="nav-link">
-                                         <i class="far fa-circle nav-icon"></i>
-                                         <p>Department Index</p>
-                                     </a>
-                                 </li>
-                                 <li class="nav-item">
-                                     <a asp-controller="Departments" asp-action="Create" class="nav-link">
-                                         <i class="far fa-circle nav-icon"></i>
-                                         <p>Department Add</p>
-                                     </a>
-                                 </li>
-                             </ul>
-                         </li>
-                         <li class="nav-item has-treeview">
-                             <a href="#" class="nav-link">
-                                 <i class="nav-icon fas fa-user"></i>
-                                 <p>
-                                     Users
-                                     <i class="fas fa-angle-left right"></i>
-                                 </p>
-                             </a>
-                             <ul class="nav nav-treeview">
-                                 <li class="nav-item">
-                                     <a asp-controller="Users" asp-action="Index" class="nav-link">
-                                         <i class="far fa-circle nav-icon"></i>
-                                         <p>User Index</p>
-                                     </a>
-                                 </li>
-                                 <li class="nav-item">
-                                     <a asp-area="Identity" asp-page="/Account/Register" class="nav-link">
-                                         <i class="far fa-circle nav-icon"></i>
-                                         <p>User Add</p>
-                                     </a>
-                                 </li>
-                             </ul>
-                         </li>
+                             <li class="nav-item has-treeview">
+                                 <a href="#" class="nav-link">
+                                     <i class="nav-icon fas fa-book"></i>
+                                     <p>
+                                         Projects
+                                         <i class="fas fa-angle-left right"></i>
+                                     </p>
+                                 </a>
+                                 <ul class="nav nav-treeview">
+                                     <li class="nav-item">
+                                         <a asp-controller="Projects" asp-action="Index" class="nav-link">
+                                             <i class="far fa-circle nav-icon"></i>
+                                             <p>Project Index</p>
+                                         </a>
+                                     </li>
+                                     <li class="nav-item">
+                                         <a asp-controller="Projects" asp-action="Create" class="nav-link">
+                                             <i class="far fa-circle nav-icon"></i>
+                                             <p>Project Add</p>
+                                         </a>
+                                     </li>
+                                 </ul>
+                             </li>
+                             <li class="nav-item has-treeview">
+                                 <a href="#" class="nav-link">
+                                     <i class="nav-icon fas fa-building"></i>
+                                     <p>
+                                         Departments
+                                         <i class="fas fa-angle-left right"></i>
+                                     </p>
+                                 </a>
+                                 <ul class="nav nav-treeview">
+                                     <li class="nav-item">
+                                         <a asp-controller="Departments" asp-action="Index" class="nav-link">
+                                             <i class="far fa-circle nav-icon"></i>
+                                             <p>Department Index</p>
+                                         </a>
+                                     </li>
+                                     <li class="nav-item">
+                                         <a asp-controller="Departments" asp-action="Create" class="nav-link">
+                                             <i class="far fa-circle nav-icon"></i>
+                                             <p>Department Add</p>
+                                         </a>
+                                     </li>
+                                 </ul>
+                             </li>
+                             <li class="nav-item">
+                                 <a href="#" class="nav-link">
+                                     <i class="nav-icon fas fa-user-circle"></i>
+                                     <p>
+                                         Users
+                                         <i class="fas fa-angle-left right"></i>
+                                     </p>
+                                 </a>
+                                 <ul class="nav nav-treeview">
+                                     <li class="nav-item">
+                                         <a asp-controller="Users" asp-action="Index" class="nav-link">
+                                             <i class="far fa-circle nav-icon"></i>
+                                             <p>User Index</p>
+                                         </a>
+                                     </li>
+                                     <li class="nav-item">
+                                         <a asp-area="Identity" asp-page="/Account/Register" class="nav-link">
+                                             <i class="far fa-circle nav-icon"></i>
+                                             <p>User Add</p>
+                                         </a>
+                                     </li>
+                                 </ul>
+                             </li>
+                             <li class="nav-item">
+                                 <a asp-controller="Administration" asp-action="Index" class="nav-link">
+                                     <i class="nav-icon fas fa-user"></i>
+                                     <p>
+                                         Roles
+                                     </p>
+                                 </a>
+                             </li>
                          }
                      </ul>
                  </nav>
