@@ -1,29 +1,90 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Timesheets.Areas.Identity.Data;
 using Timesheets.Data;
 using Timesheets.Models;
 
 namespace Timesheets.Controllers
 {
+    // https://docs.microsoft.com/en-us/aspnet/core/security/authorization/resourcebased?view=aspnetcore-2.1
+    // https://docs.microsoft.com/en-us/aspnet/core/security/authorization/policies?view=aspnetcore-2.1#applying-policies-to-razor-pages
     public class TimesheetEntriesController : Controller
     {
+        private readonly IAuthorizationService _authorizationService;
         private readonly ApplicationDbContext _context;
 
-        public TimesheetEntriesController(ApplicationDbContext context)
+        public TimesheetEntriesController(IAuthorizationService authorizationService, ApplicationDbContext context)
         {
+            _authorizationService = authorizationService;
             _context = context;
         }
 
         // GET: TimesheetEntries
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string searchString)
         {
-            var applicationDbContext = _context.TimesheetEntries.Include(t => t.Project).Include(t => t.User);
-            return View(await applicationDbContext.ToListAsync());
+            if (!User.Identity.IsAuthenticated)
+            {
+                return new ChallengeResult();
+            }
+
+            ViewBag.DateSortParm = String.IsNullOrEmpty(sortOrder) ? "date_desc" : "";
+            ViewBag.HoursWorkedSortParm = sortOrder == "hoursWorked_asc" ? "hoursWorked_desc" : "hoursWorked_asc";
+            ViewBag.UserNameSortParm = sortOrder == "userName_asc" ? "userName_desc" : "userName_asc";
+            ViewBag.ProjectSortParm = sortOrder == "project_asc" ? "project_desc" : "project_asc";
+
+            IEnumerable<TimesheetEntry> timesheetList = _context.TimesheetEntries.
+                Where(t => t.UserId == User.FindFirst(ClaimTypes.NameIdentifier).Value).
+                Include(t => t.Project).Include(t => t.User);
+            if (String.IsNullOrEmpty(searchString))
+            {
+                searchString = ViewBag.SearchString;
+            }
+            else
+            {
+                ViewBag.SearchString = searchString;
+            }
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                timesheetList = timesheetList.Where(t => t.Project.Name.Contains(searchString, StringComparison.CurrentCultureIgnoreCase)
+                                       || t.User.FirstName.Contains(searchString, StringComparison.CurrentCultureIgnoreCase)
+                                       || t.User.LastName.Contains(searchString, StringComparison.CurrentCultureIgnoreCase));
+            }
+            switch (sortOrder)
+            {
+                case "hoursWorked_asc":
+                    timesheetList = timesheetList.OrderBy(t => t.HoursWorked);
+                    break;
+                case "hoursWorked_desc":
+                    timesheetList = timesheetList.OrderByDescending(t => t.HoursWorked);
+                    break;
+                case "userName_asc":
+                    timesheetList = timesheetList.OrderBy(t => t.User.FirstName);
+                    break;
+                case "userName_desc":
+                    timesheetList = timesheetList.OrderByDescending(t => t.User.FirstName);
+                    break;
+                case "project_asc":
+                    timesheetList = timesheetList.OrderBy(t => t.Project.Name);
+                    break;
+                case "project_desc":
+                    timesheetList = timesheetList.OrderByDescending(t => t.Project.Name);
+                    break;
+                case "date_desc":
+                    timesheetList = timesheetList.OrderByDescending(t => t.DateCreated);
+                    break;
+                default:
+                    timesheetList = timesheetList.OrderBy(t => t.DateCreated);
+                    break;
+            }
+            return View(timesheetList.ToList());
         }
 
         // GET: TimesheetEntries/Details/5
@@ -44,7 +105,20 @@ namespace Timesheets.Controllers
                 return NotFound();
             }
 
-            return View(timesheetEntry);
+            var authorizationResult = await _authorizationService
+                .AuthorizeAsync(User, timesheetEntry, "SameTimesheetEntryCreator");
+            if (authorizationResult.Succeeded)
+            {
+                return View(timesheetEntry);
+            }
+            else if (User.Identity.IsAuthenticated)
+            {
+                return new ForbidResult();
+            }
+            else
+            {
+                return new ChallengeResult();
+            }
         }
 
         // GET: TimesheetEntries/Create
@@ -57,6 +131,7 @@ namespace Timesheets.Controllers
             ViewBag.ApplicationUsers = new SelectList(_context.ApplicationUsers
                .Select(u => new { FullName = String.Format("{0} {1}", u.FirstName, u.LastName), u.Id })
                , "Id", "FullName");
+            // TODO: automatically use current user's id
             return View();
         }
 
@@ -65,12 +140,12 @@ namespace Timesheets.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create( TimesheetEntry timesheetEntry)
+        public async Task<IActionResult> Create(TimesheetEntry timesheetEntry)
         {
             var justCheck = _context.TimesheetEntries
                 .Where(t => t.DateCreated.Date == timesheetEntry.DateCreated.Date && t.ProjectId == timesheetEntry.ProjectId).FirstOrDefault();
 
-            if (ModelState.IsValid && justCheck == null && timesheetEntry.HoursWorked>0)
+            if (ModelState.IsValid && justCheck == null && timesheetEntry.HoursWorked > 0)
             {
                 _context.Add(timesheetEntry);
                 await _context.SaveChangesAsync();
@@ -109,7 +184,7 @@ namespace Timesheets.Controllers
             {
                 ViewBag.Projects = new SelectList(_context.Projects, "ProjectId", "Name");
                 ViewBag.ApplicationUsers = new SelectList(_context.ApplicationUsers
-                   .Select(u => new { FullName = String.Format("{0} {1}", u.FirstName, u.LastName), u.Id })
+                   .Select(u => new { FullName = string.Format("{0} {1}", u.FirstName, u.LastName), u.Id })
                    , "Id", "FullName");
                 return View(timesheetEntry);
             }
@@ -136,7 +211,7 @@ namespace Timesheets.Controllers
             }
             var authorizationResult = await _authorizationService
                 .AuthorizeAsync(User, timesheetEntry, "SameTimesheetEntryCreator");
-            if (authorizationResult.Succeeded && timesheetEntry.HoursWorked > 0 )
+            if (authorizationResult.Succeeded && timesheetEntry.HoursWorked > 0)
             {
                 try
                 {
