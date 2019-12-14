@@ -19,6 +19,7 @@ namespace Timesheets.Controllers
             _roleManager = roleManager;
             _userManager = userManager;
         }
+
         [HttpGet(Name = nameof(CreateRole))]
         public IActionResult CreateRole()
         {
