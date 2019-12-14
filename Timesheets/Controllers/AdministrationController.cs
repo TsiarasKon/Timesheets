@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Timesheets.Areas.Identity.Data;
@@ -9,6 +10,7 @@ using Timesheets.ViewModels;
 
 namespace Timesheets.Controllers
 {
+    [Authorize(Roles = "Administrator")]
     public class AdministrationController : Controller
     {
         private readonly RoleManager<IdentityRole> _roleManager;

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ using Timesheets.Models;
 
 namespace Timesheets.Controllers
 {
+    [Authorize(Roles = "Administrator")]
     public class DepartmentsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -22,6 +24,11 @@ namespace Timesheets.Controllers
         // GET: Departments
         public IActionResult Index(string sortOrder, string searchString)
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return new ChallengeResult();
+            }
+
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewBag.DepartmentHeadSortParm = sortOrder == "deptHead_asc" ? "deptHead_desc" : "deptHead_asc";
 

@@ -24,9 +24,9 @@ namespace Timesheets
                 var serviceProvider = scope.ServiceProvider;
                 try
                 {
+                    var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
                     var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-                    //var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-                    //SeedData.SeedRoles(roleManager);
+                    SeedData.SeedRoles(roleManager);
                     SeedData.SeedUsers(userManager);
                     SeedData.SeedRest(serviceProvider);
                 }

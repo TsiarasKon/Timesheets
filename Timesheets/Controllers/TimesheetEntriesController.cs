@@ -14,8 +14,7 @@ using Timesheets.Models;
 
 namespace Timesheets.Controllers
 {
-    // https://docs.microsoft.com/en-us/aspnet/core/security/authorization/resourcebased?view=aspnetcore-2.1
-    // https://docs.microsoft.com/en-us/aspnet/core/security/authorization/policies?view=aspnetcore-2.1#applying-policies-to-razor-pages
+    [Authorize(Roles = "Administrator, Manager, Employee")]
     public class TimesheetEntriesController : Controller
     {
         private readonly IAuthorizationService _authorizationService;
@@ -40,9 +39,37 @@ namespace Timesheets.Controllers
             ViewBag.UserNameSortParm = sortOrder == "userName_asc" ? "userName_desc" : "userName_asc";
             ViewBag.ProjectSortParm = sortOrder == "project_asc" ? "project_desc" : "project_asc";
 
-            IEnumerable<TimesheetEntry> timesheetList = _context.TimesheetEntries.
+            IEnumerable<TimesheetEntry> timesheetList;
+            if (User.IsInRole("Administrator"))
+            {
+                timesheetList = _context.TimesheetEntries.
+                Include(t => t.Project).Include(t => t.User);
+            } else if (User.IsInRole("Manager"))
+            {
+                timesheetList = _context.TimesheetEntries.
+                Include(t => t.Project).Include(t => t.User).
+                Where(t => t.User.ManagerId == User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            } else
+            {
+                timesheetList = _context.TimesheetEntries.
                 Where(t => t.UserId == User.FindFirst(ClaimTypes.NameIdentifier).Value).
                 Include(t => t.Project).Include(t => t.User);
+            }  
+
+            //IEnumerable<TimesheetEntry> timesheetList = _context.TimesheetEntries.
+            //    Include(t => t.Project).Include(t => t.User);
+            //timesheetList = timesheetList.ToList().RemoveAll(TimesheetEntryAuthorizedAsync);
+            //IEnumerable<TimesheetEntry> timesheetList = Enumerable.Empty<TimesheetEntry>();
+            //foreach (var entry in timesheetListUnverified)
+            //{
+            //    var authorizationResult = await _authorizationService
+            //    .AuthorizeAsync(User, entry, "SameTimesheetEntryCreator");
+            //    if (authorizationResult.Succeeded)
+            //    {
+            //        timesheetList.Append(entry);
+            //    }
+            //}
+
             if (String.IsNullOrEmpty(searchString))
             {
                 searchString = ViewBag.SearchString;
@@ -124,9 +151,6 @@ namespace Timesheets.Controllers
         // GET: TimesheetEntries/Create
         public IActionResult Create()
         {
-            //ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId");
-            //ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id");
-
             ViewBag.Projects = new SelectList(_context.Projects, "ProjectId", "Name");
             ViewBag.ApplicationUsers = new SelectList(_context.ApplicationUsers
                .Select(u => new { FullName = String.Format("{0} {1}", u.FirstName, u.LastName), u.Id })
@@ -140,24 +164,32 @@ namespace Timesheets.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+<<<<<<<<< Temporary merge branch 1
+        public async Task<IActionResult> Create( TimesheetEntry timesheetEntry)
+=========
         public async Task<IActionResult> Create(TimesheetEntry timesheetEntry)
+>>>>>>>>> Temporary merge branch 2
         {
             var justCheck = _context.TimesheetEntries
                 .Where(t => t.DateCreated.Date == timesheetEntry.DateCreated.Date && t.ProjectId == timesheetEntry.ProjectId).FirstOrDefault();
 
+<<<<<<<<< Temporary merge branch 1
+            if (ModelState.IsValid && justCheck == null && timesheetEntry.HoursWorked>0)
+=========
+            //var applicationDbContext = _context.TimesheetEntries.Include(t => t.Project).Include(t => t.User);
+            //    return View(await applicationDbContext.ToListAsync());
             if (ModelState.IsValid && justCheck == null && timesheetEntry.HoursWorked > 0)
+>>>>>>>>> Temporary merge branch 2
             {
                 _context.Add(timesheetEntry);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            //ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId", timesheetEntry.ProjectId);
-            //ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", timesheetEntry.UserId);
+
             ViewBag.Projects = new SelectList(_context.Projects, "ProjectId", "Name");
             ViewBag.ApplicationUsers = new SelectList(_context.ApplicationUsers
                .Select(u => new { FullName = String.Format("{0} {1}", u.FirstName, u.LastName), u.Id })
                , "Id", "FullName");
-
             return View(timesheetEntry);
         }
 
@@ -211,7 +243,11 @@ namespace Timesheets.Controllers
             }
             var authorizationResult = await _authorizationService
                 .AuthorizeAsync(User, timesheetEntry, "SameTimesheetEntryCreator");
-            if (authorizationResult.Succeeded && timesheetEntry.HoursWorked > 0)
+            if (authorizationResult.Succeeded && timesheetEntry.HoursWorked > 0 )
+=========
+
+            if (timesheetEntry.HoursWorked > 0)
+>>>>>>>>> Temporary merge branch 2
             {
                 try
                 {
@@ -233,8 +269,10 @@ namespace Timesheets.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId", timesheetEntry.ProjectId);
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", timesheetEntry.UserId);
+            ViewBag.Projects = new SelectList(_context.Projects, "ProjectId", "Name");
+            ViewBag.ApplicationUsers = new SelectList(_context.ApplicationUsers
+               .Select(u => new { FullName = String.Format("{0} {1}", u.FirstName, u.LastName), u.Id })
+               , "Id", "FullName");
             return View(timesheetEntry);
         }
 
@@ -294,6 +332,12 @@ namespace Timesheets.Controllers
         private bool TimesheetEntryExists(long id)
         {
             return _context.TimesheetEntries.Any(e => e.TimesheetEntryId == id);
+        }
+
+        private bool TimesheetEntryAuthorizedAsync(TimesheetEntry entry)
+        {
+            var authorizationResult = _authorizationService.AuthorizeAsync(User, entry, "SameTimesheetEntryCreator").Result;
+            return authorizationResult.Succeeded;
         }
     }
 }
