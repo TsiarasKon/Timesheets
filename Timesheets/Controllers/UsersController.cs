@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,9 +14,12 @@ namespace Timesheets.Controllers
     public class UsersController : Controller
     {
         private readonly ApplicationDbContext _context;
-        public UsersController(ApplicationDbContext context)
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        public UsersController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         //Get:Users
@@ -159,12 +163,32 @@ namespace Timesheets.Controllers
 
         // POST: Users/Delete
         [HttpPost]
-        public async Task<IActionResult> DeleteConfirmed(string id)
+        public async Task<ActionResult> DeleteConfirmed(string id)
         {
-            var user = await _context.ApplicationUsers.FindAsync(id);
-            _context.ApplicationUsers.Remove(user);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            if (ModelState.IsValid)
+            {
+                if (id == null)
+                {
+                    return NotFound();
+                }
+
+                var user = await _userManager.FindByIdAsync(id);
+                //var userRole = (await _userManager.GetRolesAsync(user))[0];
+
+                //using (var transaction = _context.Database.BeginTransaction())
+                //{
+
+                //    _userManager.RemoveFromRoleAsync(user, userRole).Wait();
+                    await _userManager.DeleteAsync(user);
+                    //transaction.Commit();
+                //}
+
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return View();
+            }
         }
 
         private bool UserExists(string id)

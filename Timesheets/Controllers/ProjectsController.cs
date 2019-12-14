@@ -185,6 +185,7 @@ namespace Timesheets.Controllers
             var project = await _context.Projects
                 .Include(p => p.OwnerDepartment)
                 .FirstOrDefaultAsync(m => m.ProjectId == id);
+            ViewData["ExistingProjects"] = (_context.TimesheetEntries.Where(t => t.ProjectId == id).ToList().Count > 0);
             if (project == null)
             {
                 return NotFound();

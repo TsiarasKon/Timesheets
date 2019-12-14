@@ -63,7 +63,8 @@
 
                                 <form asp-action="Delete">
                                     <input type="hidden" asp-for="Department.DepartmentId" />
-                                    <input type="submit" value="Delete" class="btn btn-danger" />
+                                    <input type="submit" value="Delete" class="btn btn-danger" 
+                                           onclick="return confirm('Are you sure you want to delete this Department?');"/>
                                     <a class="btn btn-secondary" asp-action="Index">Back to Departments</a>
                                 </form>
                             </div>

@@ -48,9 +48,15 @@
                                     @Html.DisplayFor(model => model.OwnerDepartment.DepartmentId)
                                 </dd>
                             </dl>
+                            @if ((bool) ViewData["ExistingProjects"])
+                            {
+                                <p class="text-danger"> This Project contains Timesheet Entries.
+                            If you delete it, those Timesheet Entries will be deleted as well!</p>
+                            }
                             <form asp-action="Delete">
                                 <input type="hidden" asp-for="ProjectId" />
-                                <input type="submit" value="Delete" class="btn btn-danger" />
+                                <input type="submit" value="Delete" class="btn btn-danger" 
+                                       onclick="return confirm('Are you sure you want to delete this Project?');" />
                                 <a class="btn btn-secondary" asp-action="Index">Back to Projects</a>
                             </form>
                         </div>
