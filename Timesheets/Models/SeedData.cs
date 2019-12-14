@@ -180,8 +180,8 @@ namespace Timesheets.Models
                     new Project() { Name = "Android App For New Product", OwnerDepartmentId = newDepartmentsIdList[0] },
                     new Project() { Name = "New Website", OwnerDepartmentId = newDepartmentsIdList[1] },
                     new Project() { Name = "New database", OwnerDepartmentId = newDepartmentsIdList[0] },
-                    new Project() { Name = "Create a website for the product.", OwnerDepartmentId = newDepartmentsIdList[2] },
-                    new Project() { Name = "Integrate sql db.", OwnerDepartmentId = newDepartmentsIdList[1] }
+                    new Project() { Name = "Create a website for the product", OwnerDepartmentId = newDepartmentsIdList[2] },
+                    new Project() { Name = "Integrate sql db", OwnerDepartmentId = newDepartmentsIdList[1] }
 
                 };
                 context.Projects.AddRange(newProjects);
@@ -205,15 +205,15 @@ namespace Timesheets.Models
 
                 IList<TimesheetEntry> newTimesheetEntries = new List<TimesheetEntry>()
                 {
-                    new TimesheetEntry() { DateCreated = DateTime.Now, HoursWorked = 7, UserId = usersIdList[0], ProjectId = newProjectsIdList[0] },
-                    new TimesheetEntry() { DateCreated = DateTime.Now, HoursWorked = 3, UserId = usersIdList[0], ProjectId = newProjectsIdList[1] },
+                    new TimesheetEntry() { DateCreated = DateTime.Now, HoursWorked = 7, UserId = usersIdList[3], ProjectId = newProjectsIdList[0] },
+                    new TimesheetEntry() { DateCreated = DateTime.Now, HoursWorked = 3, UserId = usersIdList[3], ProjectId = newProjectsIdList[1] },
                     new TimesheetEntry() { DateCreated = DateTime.Now, HoursWorked = 8, UserId = usersIdList[2], ProjectId = newProjectsIdList[3] },
                     new TimesheetEntry() { DateCreated = DateTime.Now, HoursWorked = 10,UserId = usersIdList[1], ProjectId = newProjectsIdList[2] },
                     new TimesheetEntry() { DateCreated = DateTime.Now, HoursWorked = 4,UserId = usersIdList[2], ProjectId = newProjectsIdList[3] },
                     new TimesheetEntry() { DateCreated = DateTime.Now, HoursWorked = 9,UserId = usersIdList[1], ProjectId = newProjectsIdList[1] },
                     new TimesheetEntry() { DateCreated = DateTime.Now, HoursWorked = 12,UserId = usersIdList[1], ProjectId = newProjectsIdList[2] },
-                    new TimesheetEntry() { DateCreated = DateTime.Now, HoursWorked = 13,UserId = usersIdList[0], ProjectId = newProjectsIdList[1] },
-                    new TimesheetEntry() { DateCreated = DateTime.Now, HoursWorked = 14,UserId = usersIdList[0], ProjectId = newProjectsIdList[2] },
+                    new TimesheetEntry() { DateCreated = DateTime.Now, HoursWorked = 13,UserId = usersIdList[3], ProjectId = newProjectsIdList[1] },
+                    new TimesheetEntry() { DateCreated = DateTime.Now, HoursWorked = 14,UserId = usersIdList[3], ProjectId = newProjectsIdList[2] },
                     new TimesheetEntry() { DateCreated = DateTime.Now, HoursWorked = 20,UserId = usersIdList[1], ProjectId = newProjectsIdList[3] }
                 };
                 context.TimesheetEntries.AddRange(newTimesheetEntries);

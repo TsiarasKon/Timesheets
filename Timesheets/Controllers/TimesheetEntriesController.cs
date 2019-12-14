@@ -157,7 +157,7 @@ namespace Timesheets.Controllers
             ViewBag.ApplicationUsers = new SelectList(_context.ApplicationUsers
                .Select(u => new { FullName = String.Format("{0} {1}", u.FirstName, u.LastName), u.Id })
                , "Id", "FullName");
-            // TODO: automatically use current user's id
+            ViewData["CurrentUserId"] = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             return View();
         }
 
@@ -168,8 +168,14 @@ namespace Timesheets.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create( TimesheetEntry timesheetEntry)
         {
+            if (User.IsInRole("Employee"))
+            {
+                timesheetEntry.UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            }
+            timesheetEntry.User = _context.ApplicationUsers.SingleOrDefault(u => u.Id == timesheetEntry.UserId);
+
             var justCheck = _context.TimesheetEntries
-                .Where(t => t.DateCreated.Date == timesheetEntry.DateCreated.Date && t.ProjectId == timesheetEntry.ProjectId).FirstOrDefault();
+            .Where(t => t.DateCreated.Date == timesheetEntry.DateCreated.Date && t.ProjectId == timesheetEntry.ProjectId).FirstOrDefault();
 
             if (ModelState.IsValid && justCheck == null && timesheetEntry.HoursWorked>0)
             {
@@ -210,6 +216,7 @@ namespace Timesheets.Controllers
                 ViewBag.ApplicationUsers = new SelectList(_context.ApplicationUsers
                    .Select(u => new { FullName = String.Format("{0} {1}", u.FirstName, u.LastName), u.Id })
                    , "Id", "FullName");
+                ViewData["CurrentUserId"] = User.FindFirst(ClaimTypes.NameIdentifier).Value;
                 return View(timesheetEntry);
             }
             else if (User.Identity.IsAuthenticated)
@@ -233,15 +240,22 @@ namespace Timesheets.Controllers
             {
                 return NotFound();
             }
+            if (User.IsInRole("Employee"))
+            {
+                timesheetEntry.UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            }
+            timesheetEntry.User = _context.ApplicationUsers.SingleOrDefault(u => u.Id == timesheetEntry.UserId);
+
             var authorizationResult = await _authorizationService
                 .AuthorizeAsync(User, timesheetEntry, "SameTimesheetEntryCreator");
-            if (authorizationResult.Succeeded && timesheetEntry.HoursWorked > 0 )
+            if (authorizationResult.Succeeded && ModelState.IsValid)
             {
                 try
                 {
-                    var oldTimesheetEntry = _context.TimesheetEntries.SingleOrDefault(x => x.TimesheetEntryId == id);
-                    oldTimesheetEntry.HoursWorked = timesheetEntry.HoursWorked;
-                    _context.Update(oldTimesheetEntry);
+                    //var oldTimesheetEntry = _context.TimesheetEntries.SingleOrDefault(x => x.TimesheetEntryId == id);
+                    //oldTimesheetEntry.HoursWorked = timesheetEntry.HoursWorked;
+                    //_context.Update(oldTimesheetEntry);
+                    _context.Update(timesheetEntry);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
