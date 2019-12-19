@@ -34,37 +34,39 @@
         <section class="content">
             <div class="container-fluid">
                 <div class="row">
-                    @foreach (var item in Model)
-                    {
-                        <div class="col-2 form-group">
 
-                            <div class="card card-primary">
-                                <div class="card-header">
-                                    <h3 class="card-title align-content-center">@Html.DisplayFor(modelItem => item.FullName)</h3>
-                                </div>
-                                <!-- /.card-header -->
-                                <div class="card-body">
-                                    <div class="row form-group">
-                                        <img class="img-fluid img-circle" src="~/theme/dist/img/standart-user-image.png" />
+                        @foreach (var item in Model)
+                        {
+                            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 form-group">
+
+                                <div class="card card-primary">
+                                    <div class="card-header">
+                                        <h3 class="card-title align-content-center">@Html.DisplayFor(modelItem => item.FullName)</h3>
                                     </div>
-                                    <div class="row">
+                                    <!-- /.card-header -->
+                                    <div class="card-body">
+                                        <div class="row form-group">
+                                            <img class="img-fluid img-circle" src="~/theme/dist/img/standart-user-image.png" />
+                                        </div>
+                                        <div class="row">
+                                            <div class="col text-center">
+                                                <span class="btn btn-dark"><div class="fa fa-at"></div> @Html.DisplayFor(modelItem => item.Email)</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /.card-body -->
+                                    <div class="card-footer">
                                         <div class="col text-center">
-                                            <span class="btn btn-dark"><div class="fa fa-at"></div> @Html.DisplayFor(modelItem => item.Email)</span>
+                                            <a class="btn btn-primary fa fa-pen font-weight-bold" asp-action="Edit" asp-route-id="@item.Id"></a>
+                                            <a class="btn btn-info fa fa-eye font-weight-bold" asp-action="Details" asp-route-id="@item.Id"></a>
+                                            <a class="btn btn-danger fa fa-trash-alt font-weight-bold" asp-action="Delete" asp-route-id="@item.Id"></a>
                                         </div>
                                     </div>
                                 </div>
-                                <!-- /.card-body -->
-                                <div class="card-footer">
-                                    <div class="col text-center">
-                                        <a class="btn btn-primary fa fa-pen font-weight-bold" asp-action="Edit" asp-route-id="@item.Id"></a>
-                                        <a class="btn btn-info fa fa-eye font-weight-bold" asp-action="Details" asp-route-id="@item.Id"></a>
-                                        <a class="btn btn-danger fa fa-trash-alt font-weight-bold" asp-action="Delete" asp-route-id="@item.Id"></a>
-                                    </div>
-                                </div>
-                            </div>
 
-                        </div>
-                    }
+                            </div>
+                        }
+
                 </div>
             </div>
         </section>
