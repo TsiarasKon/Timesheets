@@ -38,6 +38,7 @@ namespace Timesheets.Controllers
             ViewBag.HoursWorkedSortParm = sortOrder == "hoursWorked_asc" ? "hoursWorked_desc" : "hoursWorked_asc";
             ViewBag.UserNameSortParm = sortOrder == "userName_asc" ? "userName_desc" : "userName_asc";
             ViewBag.ProjectSortParm = sortOrder == "project_asc" ? "project_desc" : "project_asc";
+            ViewBag.CostSortParm = sortOrder == "cost_asc" ? "cost_desc" : "cost_asc";
 
             IEnumerable<TimesheetEntry> timesheetList;
             if (User.IsInRole("Administrator"))
@@ -105,6 +106,12 @@ namespace Timesheets.Controllers
                     break;
                 case "project_desc":
                     timesheetList = timesheetList.OrderByDescending(t => t.Project.Name);
+                    break;
+                case "cost_asc":
+                    timesheetList = timesheetList.OrderBy(t => t.HoursWorked * t.User.ManHourCost);
+                    break;
+                case "cost_desc":
+                    timesheetList = timesheetList.OrderByDescending(t => t.HoursWorked * t.User.ManHourCost);
                     break;
                 case "date_desc":
                     timesheetList = timesheetList.OrderByDescending(t => t.DateCreated);

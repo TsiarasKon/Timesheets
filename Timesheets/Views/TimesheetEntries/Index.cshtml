@@ -56,30 +56,37 @@
                                     <th>
                                         @Html.DisplayNameFor(model => model.Project) @Html.ActionLink("", "Index", new { sortOrder = ViewBag.ProjectSortParm, searchString = ViewBag.SearchString }, new { @class = "fas fa-sort" })
                                     </th>
+                                    <th>
+                                        Total Cost @Html.ActionLink("", "Index", new { sortOrder = ViewBag.CostSortParm, searchString = ViewBag.SearchString }, new { @class = "fas fa-sort" })
+                                    </th>
                                     <th></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach (var item in Model)
                                 {
-                                    <tr>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.DateCreated)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.HoursWorked)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.User.FirstName) @Html.DisplayFor(modelItem => item.User.LastName)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Project.Name)
-                                        </td>
-                                        <td>
-                                            <a class="btn btn-primary fa fa-pen font-weight-bold" asp-action="Edit" asp-route-id="@item.TimesheetEntryId"></a>
-                                            <a class="btn btn-info fa fa-eye font-weight-bold" asp-action="Details" asp-route-id="@item.TimesheetEntryId"></a>
-                                            <a class="btn btn-danger fa fa-trash-alt font-weight-bold" asp-action="Delete" asp-route-id="@item.TimesheetEntryId"></a>
-                                    </tr>
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.DateCreated)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.HoursWorked)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.User.FirstName) @Html.DisplayFor(modelItem => item.User.LastName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Project.Name)
+                                    </td>
+                                    <td>
+                                        @(item.HoursWorked * item.User.ManHourCost)
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-primary fa fa-pen font-weight-bold" asp-action="Edit" asp-route-id="@item.TimesheetEntryId"></a>
+                                        <a class="btn btn-info fa fa-eye font-weight-bold" asp-action="Details" asp-route-id="@item.TimesheetEntryId"></a>
+                                        <a class="btn btn-danger fa fa-trash-alt font-weight-bold" asp-action="Delete" asp-route-id="@item.TimesheetEntryId"></a>
+                                    </td>
+                                </tr>
                                 }
                             </tbody>
                         </table>
